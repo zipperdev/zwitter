@@ -1,0 +1,11 @@
+{
+  "name": "zwitter",
+  "version": "1.0.0",
+  "description": "Cloning Twitter with MERN Stack 🚀",
+  "keywords": [
+    "zwitter", 
+    "MERN"
+  ],
+  "author": "zipperedev",
+  "license": "MIT"
+}
