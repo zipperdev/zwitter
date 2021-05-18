@@ -13,7 +13,7 @@ export const storys = async (req, res) => {
 };
 
 export const create = async (req, res) => {
-    const { title, description, hashtags } = req.body;
+    const { story: { title, description, hashtags } } = req.body;
     try {
         const newStory = await Story.create({
             title, 
@@ -75,7 +75,7 @@ export const storyDetail =  async(req, res) => {
 
 export const edit = async (req, res) => {
     const { id } = req.params;
-    const { title, description, hashtags } = req.body;
+    const { story: { title, description, hashtags } } = req.body;
     try {
         await Story.findByIdAndUpdate(id, {
             title, 
@@ -85,6 +85,7 @@ export const edit = async (req, res) => {
         const updatedStory = await Story.findById(id);
         return res.status(200).json(updatedStory);
     } catch (error) {
+        console.log(error)
         return res.status(409).json({
             success: false, 
             error: error.message

@@ -1,10 +1,14 @@
 import React, { useEffect } from "react";
+import { useCookies } from "react-cookie";
 import axios from "axios";
 
 
 function StoryDelete({ match }) {
+    const [ cookies ] = useCookies(["token"]);
     useEffect(() => {
-        axios.delete(`http://localhost:5000/storys/${match.params.id}/delete`)
+        axios.post(`http://localhost:5000/storys/${match.params.id}/delete`, {
+            token: cookies.token
+        })
             .then((success) => {
                 if (success.data.success) {
                     window.location.href = `/`;
@@ -14,9 +18,7 @@ function StoryDelete({ match }) {
             });
     }, [match.params.id]);
     return (
-        <>
-            <h1>Loading...</h1>
-        </>
+        <h1>Loading...</h1>
     );
 };
 

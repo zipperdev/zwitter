@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 
 function StoryCreate({ match }) {
+    const [ cookies ] = useCookies(["token"]);
     const [ story, setStory ] = useState({
         title: "", 
         description: "", 
@@ -11,12 +13,15 @@ function StoryCreate({ match }) {
     });
     useEffect(() => {
         axios.get(`http://localhost:5000/storys/${match.params.id}`)
-            .then((story) => {
-                setStory(story.data);
+            .then((storyData) => {
+                setStory({ ...storyData.data, hashtags: storyData.data.hashtags.join(",") })
             });
     }, [match.params.id]);
     const updateStory = () => {
-        axios.post(`http://localhost:5000/storys/${match.params.id}/edit`, story)
+        axios.post(`http://localhost:5000/storys/${match.params.id}/edit`, {
+            story, 
+            token: cookies.token
+        })
             .then((story) => {
                 window.location.href = `/storys/${story.data._id}`;
             });

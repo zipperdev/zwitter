@@ -1,13 +1,14 @@
 import express from "express";
-import { create, edit, remove, search, storyDetail, storys } from "../controllers/storyRouter";
+import { create, edit, remove, search, storyDetail, storys } from "../controllers/storyController";
+import { tokenVerify } from '../middlewares';
 
 const storyRouter = express.Router();
 
 storyRouter.get("/", storys);
-storyRouter.post("/create", create);
+storyRouter.post("/create", tokenVerify, create);
 storyRouter.get("/search", search);
 storyRouter.get("/:id", storyDetail);
-storyRouter.post("/:id/edit", edit);
-storyRouter.delete("/:id/delete", remove);
+storyRouter.post("/:id/edit", tokenVerify, edit);
+storyRouter.post("/:id/delete", tokenVerify, remove);
 
 export default storyRouter;
