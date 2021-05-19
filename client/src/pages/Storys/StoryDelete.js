@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 
@@ -16,9 +17,14 @@ function StoryDelete({ match }) {
                     window.location.href = `/storys/${match.params.id}`;
                 }
             });
-    }, [match.params.id]);
+    }, [match.params.id, cookies.token]);
     return (
-        <h1>Loading...</h1>
+        <>
+            <Helmet>
+                <title>Zwitter | Delete Story</title>
+            </Helmet>
+            <h1>Loading...</h1>
+        </>
     );
 };
 

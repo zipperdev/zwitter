@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useCookies } from "react-cookie";
 
 function Signup() {
@@ -7,9 +8,14 @@ function Signup() {
     useEffect(() => {
         removeCookie("token");
         window.location.href = "/";
-    }, []);
+    }, [removeCookie]);
     return (
-        <h1>Loading...</h1>
+        <>
+            <Helmet>
+                <title>Zwitter | Logout</title>
+            </Helmet>
+            <h1>Loading...</h1>
+        </>
     );
 };
 

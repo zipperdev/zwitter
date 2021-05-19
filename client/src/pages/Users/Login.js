@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet";
 import { useCookies } from "react-cookie";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -16,7 +17,8 @@ function Login() {
             .then(result => {
                 if (result.data.success) {
                     setCookie("token", result.data.token, {
-                        maxAge: 1209600000
+                        maxAge: 1209600000, 
+                        path: "/"
                     });
                     window.location.href = "/";
                 } else {
@@ -26,12 +28,15 @@ function Login() {
     };
     return (
         <>
+            <Helmet>
+                <title>Zwitter | Login</title>
+            </Helmet>
             <h1>Login</h1>
             <form noValidate autoComplete="off">
-                <TextField id="outlined-basic" label="Email" variant="outlined" value={user.email} required onChange={(e) => {
+                <TextField type="email" id="outlined-basic" label="Email" variant="outlined" value={user.email} required onChange={(e) => {
                     setUser({ ...user, email: e.target.value });
                 }} />
-                <TextField id="outlined-basic" label="Password" variant="outlined" value={user.password} required onChange={(e) => {
+                <TextField type="password" id="outlined-basic" label="Password" variant="outlined" value={user.password} required onChange={(e) => {
                     setUser({ ...user, password: e.target.value });
                 }} />
                 <Button variant="contained" color="primary" onClick={login}>

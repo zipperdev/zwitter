@@ -4,14 +4,19 @@ const storySchema = mongoose.Schema({
     title: {
         type: String, 
         trim: true, 
-        maxLength: 50, 
+        maxLength: 100, 
         required: true
     }, 
     description: {
         type: String, 
         trim: true, 
-        maxLength: 300, 
+        maxLength: 1400, 
         required: true
+    }, 
+    owner: {
+        type: mongoose.Schema.Types.ObjectId, 
+        required: true, 
+        ref: "User"
     }, 
     createdAt: {
         type: Date, 

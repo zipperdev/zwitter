@@ -10,10 +10,17 @@ const userSchema = mongoose.Schema({
     }, 
     username: {
         type: String, 
+        maxLength: 80, 
         required: true
     }, 
     name: {
         type: String, 
+        maxLength: 80, 
+        required: true
+    }, 
+    createdAt: {
+        type: Date, 
+        default: Date.now, 
         required: true
     }, 
     password: {
@@ -23,7 +30,7 @@ const userSchema = mongoose.Schema({
     storys: [
         {
             type: mongoose.Schema.Types.ObjectId, 
-            ref:" Story"
+            ref: "Story"
         }
     ]
 });

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet";
 import { useCookies } from "react-cookie";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -22,12 +23,17 @@ function StoryCreate({ match }) {
     };
     return (
         <>
-            <h1>Create Student</h1>
+            <Helmet>
+                <title>Zwitter | Create Story</title>
+            </Helmet>
+            <h1>Create Story</h1>
             <form noValidate autoComplete="off">
                 <TextField id="outlined-basic" label="Title" variant="outlined" value={story.title} required onChange={(e) => {
+                    e.target.value = e.target.value.slice(0, 100);
                     setStory({ ...story, title: e.target.value });
                 }} />
-                <TextField id="outlined-basic" label="Description" variant="outlined" value={story.description} required onChange={(e) => {
+                <TextField id="outlined-basic" maxLength="1000" label="Description" multiline variant="outlined" rows={10} value={story.description} required onChange={(e) => {
+                    e.target.value = e.target.value.slice(0, 1000);
                     setStory({ ...story, description: e.target.value });
                 }} />
                 <TextField id="outlined-basic" label="Hashtags (Seperated by comma)" variant="outlined" value={story.hashtags} required onChange={(e) => {

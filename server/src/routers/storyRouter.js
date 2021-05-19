@@ -1,6 +1,7 @@
 import express from "express";
+import multer from "multer";
 import { create, edit, remove, search, storyDetail, storys } from "../controllers/storyController";
-import { tokenVerify } from '../middlewares';
+import { tokenVerify } from "../middlewares";
 
 const storyRouter = express.Router();
 

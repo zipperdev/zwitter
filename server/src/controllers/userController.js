@@ -1,6 +1,5 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 export const users = async (req, res) => {
     try {
@@ -12,6 +11,42 @@ export const users = async (req, res) => {
             error: error.message
         });
     }
+};
+
+export const userDetail = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const user = await User.findById(id).populate("storys");
+        if (user) {
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).json({
+                success: false, 
+                error: `Can't find the user that has ${id} id.`
+            });
+        };
+    } catch (error) {
+        return res.status(400).json({
+            success: false, 
+            error: error.message
+        });
+    };
+};
+
+export const userRemove = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await User.findByIdAndDelete(id);
+        return res.status(200).json({
+            success: true, 
+            message: "Successfully delete user."
+        })
+    } catch (error) {
+        return res.status(409).json({
+            success: false, 
+            error: error.message
+        });
+    };
 };
 
 export const signup = async (req, res) => {
@@ -53,7 +88,7 @@ export const login = async (req, res) => {
                 } else {
                     res.status(200).json({
                         success: true, 
-                        token: User.getSignedToken({ user: user })
+                        token: User.getSignedToken({ user })
                     });
                 };
             };

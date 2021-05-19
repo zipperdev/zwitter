@@ -1,6 +1,6 @@
 import express from "express";
 import { login, signup } from "../controllers/userController";
-import { tokenIsNull } from '../middlewares';
+import { tokenIsNull } from "../middlewares";
 
 const globalRouter = express.Router();
 

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import multer from "multer";
 import User from "./models/User";
 
 export const tokenVerify = (req, res, next) => {
