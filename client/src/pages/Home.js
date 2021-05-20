@@ -20,7 +20,7 @@ function Stories() {
             </Helmet>
             {storiesList ? (
                 <>
-                    <h1>stories</h1>
+                    <h1>Stories</h1>
                     <div>
                         {
                             JSON.stringify(storiesList) !== "[]" ? 

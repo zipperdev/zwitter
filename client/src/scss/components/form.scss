@@ -1,0 +1,21 @@
+form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    justify-content: center;
+    border-radius: 20px;
+    * {
+        margin-bottom: 10px;
+        font-family: $main-font !important;
+    }
+    button {
+        box-shadow: none !important;
+        background-color: $deepyellow !important;
+        color: $white !important;
+        margin: 0;
+        * {
+            margin: 0;
+        }
+    }
+}

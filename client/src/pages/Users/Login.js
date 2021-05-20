@@ -15,7 +15,7 @@ function Login() {
     const login = () => {
         axios({
                 url: "http://localhost:5000/login", 
-                method: "GET", 
+                method: "POST", 
                 data: user
             })
             .then(result => {
@@ -37,13 +37,13 @@ function Login() {
             </Helmet>
             <h1>Login</h1>
             <form noValidate autoComplete="off">
-                <TextField type="email" id="outlined-basic" label="Email" variant="outlined" value={user.email} required onChange={(e) => {
+                <TextField type="email" className="outlined-basic" label="Email" variant="outlined" value={user.email} required onChange={(e) => {
                     setUser({ ...user, email: e.target.value });
                 }} />
-                <TextField type="password" id="outlined-basic" label="Password" variant="outlined" value={user.password} required onChange={(e) => {
+                <TextField type="password" className="outlined-basic" label="Password" variant="outlined" value={user.password} required onChange={(e) => {
                     setUser({ ...user, password: e.target.value });
                 }} />
-                <Button variant="contained" color="primary" onClick={login}>
+                <Button variant="contained" onClick={login}>
                     Login
                 </Button>
             </form>

@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet";
 import { CookiesProvider, useCookies } from "react-cookie";
 import { Route, BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import HomeRounded from "@material-ui/icons/HomeRounded";
-import AddCircleOutlineRounded from "@material-ui/icons/AddCircleOutlineRounded";
 import AccountCircleOutlined from "@material-ui/icons/AccountCircleOutlined";
 import PersonAddRounded from "@material-ui/icons/PersonAddRounded";
 import LockRounded from "@material-ui/icons/LockRounded";
@@ -19,7 +18,8 @@ import Signup from "./pages/Users/Signup";
 import Login from "./pages/Users/Login";
 import Logout from "./pages/Users/Logout";
 import UserDetail from "./pages/Users/UserDetail";
-import "./styles/main.css";
+import "./scss/styles.scss";
+import jsCore from "./js/main";
 
 function App() {
     const [ cookies ] = useCookies(["token"]);
@@ -35,36 +35,39 @@ function App() {
                 <title>Zwitter</title>
             </Helmet>
             <header>
-                <a href="/">
+                <a id="header__logo" href="/">
                     <img src={LogoImage} alt="Zwitter" />
                 </a>
-                <nav>
-                    <a href="/">
-                        <HomeRounded color="primary" />
-                    </a>
-                    {cookies.token ? (
-                        <>
-                            <a href="/stories/create">
-                                <AddCircleOutlineRounded color="primary" />
-                            </a>
-                            <a href={done ? `/users/${encodedToken.user._id}` : "/users/null"}>
-                                <AccountCircleOutlined color="primary" />
-                            </a>
-                            <a href="/logout">
-                                <LockRounded color="primary" />
-                            </a>
-                        </>
-                    ) : (
-                        <>
-                            <a href="/signup">
-                                <PersonAddRounded color="primary" />
-                            </a>
-                            <a href="/login">
-                                <LockOpenRounded color="primary" />
-                            </a>
-                        </>
-                    )}
-                </nav>
+                <a href="/">
+                    <HomeRounded />
+                    <span>Home</span>
+                </a>
+                {cookies.token ? (
+                    <>
+                        <a href={done ? `/users/${encodedToken.user._id}` : "/users/null"}>
+                            <AccountCircleOutlined />
+                            <span>Profile</span>
+                        </a>
+                        <a href="/logout">
+                            <LockRounded />
+                            <span>Logout</span>
+                        </a>
+                        <a className="write-zweet" href="/stories/create">
+                            <span>Zweet</span>
+                        </a>
+                    </>
+                ) : (
+                    <>
+                        <a href="/signup">
+                            <PersonAddRounded />
+                            <span>Sign Up</span>
+                        </a>
+                        <a href="/login">
+                            <LockOpenRounded />
+                            <span>Login</span>
+                        </a>
+                    </>
+                )}
             </header>
             <main>
                 <Router>
@@ -93,6 +96,7 @@ function App() {
                     </Switch>
                 </Router>
             </main>
+            <script src={jsCore}></script>
         </CookiesProvider>
     );
 }

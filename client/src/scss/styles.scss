@@ -1,0 +1,28 @@
+@import "./config/_variants.scss";
+@import "./config/_reset.scss";
+@import "./config/_fonts.scss";
+@import "./components/header.scss";
+@import "./components/form.scss";
+
+::selection {
+    color: $white;
+    background-color: ($deepyellow + D4);
+}
+
+body {
+    font-family: $main-font !important;
+}
+
+main {
+    margin-left: 240px;
+    padding: 12px;
+}
+
+a {
+    color: $blue;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 30px;
+}

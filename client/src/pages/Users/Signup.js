@@ -70,7 +70,7 @@ function Signup() {
                         ))}
                     </Select>
                 </FormControl>
-                <Button variant="contained" color="primary" onClick={signup}>
+                <Button variant="contained" onClick={signup}>
                     Sign Up
                 </Button>
             </form>

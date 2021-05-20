@@ -52,7 +52,7 @@ function StoryCreate({ match }) {
                 <TextField id="outlined-basic" label="Hashtags (Seperated by comma)" variant="outlined" value={story.hashtags} required onChange={(e) => {
                     setStory({ ...story, hashtags: e.target.value });
                 }} />
-                <Button variant="contained" color="primary" onClick={updateStory}>
+                <Button variant="contained" onClick={updateStory}>
                     Update Story
                 </Button>
             </form>

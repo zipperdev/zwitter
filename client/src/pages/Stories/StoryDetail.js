@@ -23,7 +23,7 @@ function StoryDetail({ match }) {
                     <h4>Made By {story.owner.username}</h4>
                     <h2>{story.title}</h2>
                     <small>{story.createdAt}</small>
-                    <p>{story.description}</p>
+                    <pre>{story.description}</pre>
                     <a href={`/stories/${match.params.id}/delete`}>Delete Story</a>
                     <a href={`/stories/${match.params.id}/edit`}>Edit Story</a>
                 </>

@@ -16,6 +16,7 @@ export const stories = async (req, res) => {
 
 export const create = async (req, res) => {
     const { title, description, hashtags } = req.body;
+    const { token } = req.headers;
     try {
         const decodedToken = await jwt.decode(token);
         const newStory = await Story.create({
