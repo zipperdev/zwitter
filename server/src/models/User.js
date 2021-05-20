@@ -27,10 +27,10 @@ const userSchema = mongoose.Schema({
         type: String
     }, 
     location: String, 
-    stories: [
+    zweets: [
         {
             type: mongoose.Schema.Types.ObjectId, 
-            ref: "Story"
+            ref: "Zweet"
         }
     ]
 });

@@ -3,21 +3,23 @@ import { Helmet } from "react-helmet";
 import { CookiesProvider, useCookies } from "react-cookie";
 import { Route, BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import HomeRounded from "@material-ui/icons/HomeRounded";
-import AccountCircleOutlined from "@material-ui/icons/AccountCircleOutlined";
+import MapRounded from "@material-ui/icons/MapRounded";
+import AccountBoxRounded from "@material-ui/icons/AccountBoxRounded";
 import PersonAddRounded from "@material-ui/icons/PersonAddRounded";
 import LockRounded from "@material-ui/icons/LockRounded";
 import LockOpenRounded from "@material-ui/icons/LockOpenRounded";
 import LogoImage from "./images/logo.svg";
 import jwt from "jsonwebtoken";
 import Home from "./pages/Home";
-import StoryDetail from "./pages/Stories/StoryDetail";
-import StoryCreate from "./pages/Stories/StoryCreate";
-import StoryEdit from "./pages/Stories/StoryEdit";
-import StoryDelete from "./pages/Stories/StoryDelete";
+import ZweetDetail from "./pages/Zweets/ZweetDetail";
+import ZweetCreate from "./pages/Zweets/ZweetCreate";
+import ZweetEdit from "./pages/Zweets/ZweetEdit";
+import ZweetDelete from "./pages/Zweets/ZweetDelete";
 import Signup from "./pages/Users/Signup";
 import Login from "./pages/Users/Login";
 import Logout from "./pages/Users/Logout";
 import UserDetail from "./pages/Users/UserDetail";
+import Explore from "./pages/Explore";
 import "./scss/styles.scss";
 import jsCore from "./js/main";
 
@@ -42,17 +44,21 @@ function App() {
                     <HomeRounded />
                     <span>Home</span>
                 </a>
+                <a href="/explore">
+                    <MapRounded />
+                    <span>Explore</span>
+                </a>
                 {cookies.token ? (
                     <>
                         <a href={done ? `/users/${encodedToken.user._id}` : "/users/null"}>
-                            <AccountCircleOutlined />
+                            <AccountBoxRounded />
                             <span>Profile</span>
                         </a>
                         <a href="/logout">
                             <LockRounded />
                             <span>Logout</span>
                         </a>
-                        <a className="write-zweet" href="/stories/create">
+                        <a className="write-zweet" href="/zweets/create">
                             <span>Zweet</span>
                         </a>
                     </>
@@ -73,6 +79,7 @@ function App() {
                 <Router>
                     <Switch>
                         <Route path="/" component={Home} exact />
+                        <Route path="/explore" component={Explore} exact />
                         <Route path="/signup" exact>
                             {!cookies.token ? <Signup /> : <Redirect to="/" />}
                         </Route>
@@ -83,15 +90,15 @@ function App() {
                             {cookies.token ? <Logout /> : <Redirect to="/" />}
                         </Route>
                         <Route path="/users/:id" component={UserDetail} exeact />
-                        <Route path="/stories/create" exact>
-                            {cookies.token ? <StoryCreate /> : <Redirect to="/login" />}
+                        <Route path="/zweets/create" exact>
+                            {cookies.token ? <ZweetCreate /> : <Redirect to="/login" />}
                         </Route>
-                        <Route path="/stories/:id" component={StoryDetail} exact />
-                        <Route path="/stories/:id/edit" exact>
-                            {cookies.token ? <Route path="/stories/:id/edit" component={StoryEdit} /> : <Redirect to="/login" />}
+                        <Route path="/zweets/:id" component={ZweetDetail} exact />
+                        <Route path="/zweets/:id/edit" exact>
+                            {cookies.token ? <Route path="/zweets/:id/edit" component={ZweetEdit} /> : <Redirect to="/login" />}
                         </Route>
-                        <Route path="/stories/:id/delete" exact>
-                            {cookies.token ? <Route path="/stories/:id/delete" component={StoryDelete} /> : <Redirect to="/login" />}
+                        <Route path="/zweets/:id/delete" exact>
+                            {cookies.token ? <Route path="/zweets/:id/delete" component={ZweetDelete} /> : <Redirect to="/login" />}
                         </Route>
                     </Switch>
                 </Router>

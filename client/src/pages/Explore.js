@@ -1,26 +1,37 @@
 import axios from "axios";
 import { Helmet } from "react-helmet";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import SearchRounded from "@material-ui/icons/SearchRounded"
 
-function Zweets() {
+function Explore() {
     const [ zweetsList, setzweetsList ] = useState([]);
-    useEffect(() => {
+    const [ exploreKeyword, setExploreKeyword ] = useState([]);
+    const exploreAbout = () => {
         axios({
-                url: "http://localhost:5000/zweets", 
+                url: `http://localhost:5000/zweets/search?keyword=${exploreKeyword}`, 
                 method: "GET"
             })
             .then((zweets) => {
                 setzweetsList(zweets.data);
             });
-    }, []);
+    };
     return (
         <>
             <Helmet>
-                <title>Zwitter | Home</title>
+                <title>Zwitter | Explore</title>
             </Helmet>
+            <form noValidate autoComplete="off">
+                <TextField type="text" className="outlined-basic" label="Explore About" variant="outlined" required onChange={(e) => {
+                    setExploreKeyword(e.target.value);
+                }} />
+                <Button variant="contained" onClick={exploreAbout}>
+                    <SearchRounded />
+                </Button>
+            </form>
             {zweetsList ? (
                 <>
-                    <h1>zweets</h1>
                     <div>
                         {
                             JSON.stringify(zweetsList) !== "[]" ? 
@@ -43,4 +54,4 @@ function Zweets() {
     );
 };
 
-export default Zweets;
+export default Explore;

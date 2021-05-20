@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
-import Story from "../models/Story";
+import Zweet from "../models/Zweet";
 import User from "../models/User";
 
-export const stories = async (req, res) => {
+export const zweets = async (req, res) => {
     try {
-        const stories = await Story.find({}).sort({ createdAt: "desc" });
-        return res.status(200).json(stories);
+        const zweets = await Zweet.find({}).sort({ createdAt: "desc" });
+        return res.status(200).json(zweets);
     } catch (error) {
         return res.status(404).json({
             success: false, 
@@ -19,18 +19,18 @@ export const create = async (req, res) => {
     const { token } = req.headers;
     try {
         const decodedToken = await jwt.decode(token);
-        const newStory = await Story.create({
+        const newZweet = await Zweet.create({
             title, 
             description, 
             owner: decodedToken.user._id, 
-            hashtags: Story.formatHashtags(hashtags)
+            hashtags: Zweet.formatHashtags(hashtags)
         });
         await User.findOneAndUpdate({ email: decodedToken.user.email }, {
             $push: {
-                stories: newStory._id
+                zweets: newZweet._id
             }
         });
-        return res.status(201).json(newStory);
+        return res.status(201).json(newZweet);
     } catch (error) {
         console.log(error);
         return res.status(409).json({
@@ -43,7 +43,7 @@ export const create = async (req, res) => {
 export const search = async (req, res) => {
     const { keyword } = req.query;
     try {
-        const stories = await Story.find({
+        const zweets = await Zweet.find({
             $or: [
                 {
                     title: {
@@ -62,7 +62,7 @@ export const search = async (req, res) => {
                 }
             ]
         });
-        return res.status(200).json(stories);
+        return res.status(200).json(zweets);
     } catch (error) {
         return res.status(409).json({
             success: false, 
@@ -71,11 +71,11 @@ export const search = async (req, res) => {
     };
 };
 
-export const storyDetail =  async(req, res) => {
+export const zweetDetail =  async(req, res) => {
     const { id } = req.params;
     try {
-        const story = await Story.findById(id).populate("owner");
-        return res.status(200).json(story);
+        const zweet = await Zweet.findById(id).populate("owner");
+        return res.status(200).json(zweet);
     } catch (error) {
         return res.status(404).json({
             success: false, 
@@ -88,13 +88,13 @@ export const edit = async (req, res) => {
     const { id } = req.params;
     const { title, description, hashtags } = req.body;
     try {
-        await Story.findByIdAndUpdate(id, {
+        await Zweet.findByIdAndUpdate(id, {
             title, 
             description, 
-            hashtags: Story.formatHashtags(hashtags)
+            hashtags: Zweet.formatHashtags(hashtags)
         });
-        const updatedStory = await Story.findById(id);
-        return res.status(200).json(updatedStory);
+        const updatedZweet = await Zweet.findById(id);
+        return res.status(200).json(updatedZweet);
     } catch (error) {
         console.log(error)
         return res.status(409).json({
@@ -109,10 +109,10 @@ export const remove = async (req, res) => {
     const { token } = req.headers;
     try {
         const decodedToken = await jwt.decode(token);
-        await Story.findByIdAndDelete(id);
+        await Zweet.findByIdAndDelete(id);
         await User.findOneAndUpdate({ email: decodedToken.user.email }, {
             $pull: {
-                stories: id
+                zweets: id
             }
         });
         return res.status(200).json({

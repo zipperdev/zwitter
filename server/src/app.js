@@ -4,7 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import globalRouter from "./routers/globalRouter";
 import userRouter from "./routers/userRouter";
-import storyRouter from "./routers/storyRouter";
+import zweetRouter from "./routers/zweetRouter";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use("/", globalRouter);
 app.use("/users", userRouter);
-app.use("/stories", storyRouter);
+app.use("/zweets", zweetRouter);
 
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
     .then(() => app.listen(PORT, () => console.log(`✅ Server : http://localhost:${PORT}`)))

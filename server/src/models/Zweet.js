@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const storieschema = mongoose.Schema({
+const zweetschema = mongoose.Schema({
     title: {
         type: String, 
         trim: true, 
@@ -49,10 +49,10 @@ const storieschema = mongoose.Schema({
     }
 });
 
-storieschema.static("formatHashtags", function (hashtags) {
+zweetschema.static("formatHashtags", function (hashtags) {
     return hashtags.split(",").map((word) => word.trim());
 });
 
-const Story = mongoose.model("Story", storieschema, "stories");
+const Zweet = mongoose.model("Zweet", zweetschema, "zweets");
 
-export default Story;
+export default Zweet;

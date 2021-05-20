@@ -27,15 +27,15 @@ function UserDetail({ match }) {
                     <small>{user.location}</small>
                     <div>
                         {
-                            JSON.stringify(user.stories) !== "[]" ? 
-                                user.stories.map((story, key) => (
-                                    <a key={key} href={`/stories/${story._id}`}>
-                                        <h2>{story.title}</h2>
-                                        <p>{story.description.slice(0, 45)}{story.description.length >= 45 ? "..." : ""}</p>
-                                        <small>{story.createdAt}</small>
+                            JSON.stringify(user.zweets) !== "[]" ? 
+                                user.zweets.map((Zweet, key) => (
+                                    <a key={key} href={`/zweets/${Zweet._id}`}>
+                                        <h2>{Zweet.title}</h2>
+                                        <p>{Zweet.description.slice(0, 45)}{Zweet.description.length >= 45 ? "..." : ""}</p>
+                                        <small>{Zweet.createdAt}</small>
                                     </a>
                                 )) : (
-                                    <p>Sorry, there's no stories that {user.username} made.</p>
+                                    <p>Sorry, there's no zweets that {user.username} made.</p>
                                 )
                         }
                     </div>
