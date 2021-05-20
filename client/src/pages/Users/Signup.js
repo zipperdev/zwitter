@@ -23,7 +23,11 @@ function Signup() {
             if (user.password !== user.confrimPassoword) {
                 alert("Password confriment doesn't match.");
             } else {
-                axios.post("http://localhost:5000/signup", user)
+                axios({
+                        url: "http://localhost:5000/signup", 
+                        method: "POST", 
+                        data: user
+                    })
                     .then((user) => {
                         window.location.href = "/login";
                     });

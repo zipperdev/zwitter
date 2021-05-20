@@ -2,10 +2,10 @@ import jwt from "jsonwebtoken";
 import Story from "../models/Story";
 import User from "../models/User";
 
-export const storys = async (req, res) => {
+export const stories = async (req, res) => {
     try {
-        const storys = await Story.find({}).sort({ createdAt: "desc" });
-        return res.status(200).json(storys);
+        const stories = await Story.find({}).sort({ createdAt: "desc" });
+        return res.status(200).json(stories);
     } catch (error) {
         return res.status(404).json({
             success: false, 
@@ -15,8 +15,7 @@ export const storys = async (req, res) => {
 };
 
 export const create = async (req, res) => {
-    const { token, story: { title, description, hashtags } } = req.body;
-    console.log(req.file);
+    const { title, description, hashtags } = req.body;
     try {
         const decodedToken = await jwt.decode(token);
         const newStory = await Story.create({
@@ -27,7 +26,7 @@ export const create = async (req, res) => {
         });
         await User.findOneAndUpdate({ email: decodedToken.user.email }, {
             $push: {
-                storys: newStory._id
+                stories: newStory._id
             }
         });
         return res.status(201).json(newStory);
@@ -43,7 +42,7 @@ export const create = async (req, res) => {
 export const search = async (req, res) => {
     const { keyword } = req.query;
     try {
-        const storys = await Story.find({
+        const stories = await Story.find({
             $or: [
                 {
                     title: {
@@ -62,7 +61,7 @@ export const search = async (req, res) => {
                 }
             ]
         });
-        return res.status(200).json(storys);
+        return res.status(200).json(stories);
     } catch (error) {
         return res.status(409).json({
             success: false, 
@@ -86,7 +85,7 @@ export const storyDetail =  async(req, res) => {
 
 export const edit = async (req, res) => {
     const { id } = req.params;
-    const { story: { title, description, hashtags } } = req.body;
+    const { title, description, hashtags } = req.body;
     try {
         await Story.findByIdAndUpdate(id, {
             title, 
@@ -106,13 +105,13 @@ export const edit = async (req, res) => {
 
 export const remove = async (req, res) => {
     const { id } = req.params;
-    const { token } = req.body;
+    const { token } = req.headers;
     try {
         const decodedToken = await jwt.decode(token);
         await Story.findByIdAndDelete(id);
         await User.findOneAndUpdate({ email: decodedToken.user.email }, {
             $pull: {
-                storys: id
+                stories: id
             }
         });
         return res.status(200).json({

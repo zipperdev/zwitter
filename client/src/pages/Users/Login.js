@@ -13,7 +13,11 @@ function Login() {
     // eslint-disable-next-line
     const [ cookies, setCookie ] = useCookies(["token"]);
     const login = () => {
-        axios.post("http://localhost:5000/login", user)
+        axios({
+                url: "http://localhost:5000/login", 
+                method: "GET", 
+                data: user
+            })
             .then(result => {
                 if (result.data.success) {
                     setCookie("token", result.data.token, {

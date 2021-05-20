@@ -3,7 +3,7 @@ import multer from "multer";
 import User from "./models/User";
 
 export const tokenVerify = (req, res, next) => {
-    const { token } = req.body;
+    const { token } = req.headers;
 
     jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
         if (err) {

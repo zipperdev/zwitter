@@ -13,12 +13,16 @@ function StoryCreate({ match }) {
         hashtags: ""
     });
     const createStory = () => {
-        axios.post("http://localhost:5000/storys/create", {
-                story, 
-                token: cookies.token
+        axios({
+                url: "http://localhost:5000/stories/create", 
+                method: "POST", 
+                headers: {
+                    token: cookies.token, 
+                }, 
+                data: story
             })
             .then((story) => {
-                window.location.href = `/storys/${story.data._id}`;
+                window.location.href = `/stories/${story.data._id}`;
             });
     };
     return (

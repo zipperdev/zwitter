@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema({
         type: String
     }, 
     location: String, 
-    storys: [
+    stories: [
         {
             type: mongoose.Schema.Types.ObjectId, 
             ref: "Story"

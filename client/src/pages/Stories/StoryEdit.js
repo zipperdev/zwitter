@@ -13,18 +13,25 @@ function StoryCreate({ match }) {
         hashtags: ""
     });
     useEffect(() => {
-        axios.get(`http://localhost:5000/storys/${match.params.id}`)
+        axios({
+                url: `http://localhost:5000/stories/${match.params.id}`, 
+                method: "GET"
+            })
             .then((storyData) => {
                 setStory({ ...storyData.data, hashtags: storyData.data.hashtags.join(",") })
             });
     }, [match.params.id]);
     const updateStory = () => {
-        axios.post(`http://localhost:5000/storys/${match.params.id}/edit`, {
-            story, 
-            token: cookies.token
-        })
+        axios({
+                url: `http://localhost:5000/stories/${match.params.id}/edit`, 
+                method: "POST", 
+                headers: {
+                    token: cookies.token
+                }, 
+                data: story
+            })
             .then((story) => {
-                window.location.href = `/storys/${story.data._id}`;
+                window.location.href = `/stories/${story.data._id}`;
             });
     };
     return (

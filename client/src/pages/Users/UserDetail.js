@@ -6,7 +6,10 @@ function UserDetail({ match }) {
     const [ user, setUser ] = useState();
     const [ done, setDone ] = useState(false);
     useEffect(() => {
-        axios.get(`http://localhost:5000/users/${match.params.id}`)
+        axios({
+                url: `http://localhost:5000/users/${match.params.id}`, 
+                method: "GET"
+            })
             .then(result => {
                 setUser(result.data);
                 setDone(true);
@@ -24,15 +27,15 @@ function UserDetail({ match }) {
                     <small>{user.location}</small>
                     <div>
                         {
-                            JSON.stringify(user.storys) !== "[]" ? 
-                                user.storys.map((story, key) => (
-                                    <a key={key} href={`/storys/${story._id}`}>
+                            JSON.stringify(user.stories) !== "[]" ? 
+                                user.stories.map((story, key) => (
+                                    <a key={key} href={`/stories/${story._id}`}>
                                         <h2>{story.title}</h2>
                                         <p>{story.description.slice(0, 45)}{story.description.length >= 45 ? "..." : ""}</p>
                                         <small>{story.createdAt}</small>
                                     </a>
                                 )) : (
-                                    <p>Sorry, there's no storys that {user.username} made.</p>
+                                    <p>Sorry, there's no stories that {user.username} made.</p>
                                 )
                         }
                     </div>

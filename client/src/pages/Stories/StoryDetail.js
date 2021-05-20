@@ -5,7 +5,10 @@ import axios from "axios";
 function StoryDetail({ match }) {
     const [ story, setStory ] = useState([]);
     useEffect(() => {
-        axios.get(`http://localhost:5000/storys/${match.params.id}`)
+        axios({
+                url: `http://localhost:5000/stories/${match.params.id}`, 
+                method: "GET"
+            })
             .then((story) => {
                 setStory(story.data);
             });
@@ -21,8 +24,8 @@ function StoryDetail({ match }) {
                     <h2>{story.title}</h2>
                     <small>{story.createdAt}</small>
                     <p>{story.description}</p>
-                    <a href={`/storys/${match.params.id}/delete`}>Delete Story</a>
-                    <a href={`/storys/${match.params.id}/edit`}>Edit Story</a>
+                    <a href={`/stories/${match.params.id}/delete`}>Delete Story</a>
+                    <a href={`/stories/${match.params.id}/edit`}>Edit Story</a>
                 </>
             ) : (
                 <h1>Loading...</h1>

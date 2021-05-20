@@ -7,14 +7,18 @@ import axios from "axios";
 function StoryDelete({ match }) {
     const [ cookies ] = useCookies(["token"]);
     useEffect(() => {
-        axios.post(`http://localhost:5000/storys/${match.params.id}/delete`, {
-            token: cookies.token
-        })
+        axios({
+                url: `http://localhost:5000/stories/${match.params.id}/delete`, 
+                method: "POST", 
+                headers: {
+                    token: cookies.token
+                }
+            })
             .then((success) => {
                 if (success.data.success) {
                     window.location.href = `/`;
                 } else {
-                    window.location.href = `/storys/${match.params.id}`;
+                    window.location.href = `/stories/${match.params.id}`;
                 }
             });
     }, [match.params.id, cookies.token]);

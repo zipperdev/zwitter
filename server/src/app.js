@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use("/", globalRouter);
 app.use("/users", userRouter);
-app.use("/storys", storyRouter);
+app.use("/stories", storyRouter);
 
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
     .then(() => app.listen(PORT, () => console.log(`✅ Server : http://localhost:${PORT}`)))

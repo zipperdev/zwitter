@@ -16,7 +16,7 @@ export const users = async (req, res) => {
 export const userDetail = async (req, res) => {
     const { id } = req.params;
     try {
-        const user = await User.findById(id).populate("storys");
+        const user = await User.findById(id).populate("stories");
         if (user) {
             return res.status(200).json(user);
         } else {
