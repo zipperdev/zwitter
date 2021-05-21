@@ -75,6 +75,11 @@ export const zweetDetail =  async(req, res) => {
     const { id } = req.params;
     try {
         const zweet = await Zweet.findById(id).populate("owner");
+        await Zweet.findByIdAndUpdate(id, {
+            meta: {
+                views: zweet.meta.views + 1
+            }
+        });
         return res.status(200).json(zweet);
     } catch (error) {
         return res.status(404).json({
