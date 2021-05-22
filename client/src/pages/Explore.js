@@ -1,32 +1,39 @@
 import axios from "axios";
 import { Helmet } from "react-helmet";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import SearchRounded from "@material-ui/icons/SearchRounded"
 
-function Explore() {
+function Explore({ location }) {
     const [ zweetsList, setzweetsList ] = useState([]);
-    const [ exploreKeyword, setExploreKeyword ] = useState([]);
-    const exploreAbout = () => {
-        axios({
-                url: `http://localhost:5000/zweets/search?keyword=${exploreKeyword}`, 
+    useEffect(() => {
+        if (location.search) {
+            axios({
+                    url: `http://localhost:5000/zweets/search?keyword=${location.search.match(/(keyword)=([^&]+)/g)[0].split("=")[1]}`, 
+                    method: "GET"
+                })
+                .then((zweets) => {
+                    setzweetsList(zweets.data);
+                });
+        } else {
+            axios({
+                url: `http://localhost:5000/zweets`, 
                 method: "GET"
             })
             .then((zweets) => {
                 setzweetsList(zweets.data);
             });
-    };
+        };
+    }, [location.search]);
     return (
         <>
             <Helmet>
                 <title>Zwitter | Explore</title>
             </Helmet>
             <form noValidate autoComplete="off">
-                <TextField type="text" className="outlined-basic" label="Explore About" variant="outlined" required onChange={(e) => {
-                    setExploreKeyword(e.target.value);
-                }} />
-                <Button variant="contained" onClick={exploreAbout}>
+                <TextField name="keyword" type="text" className="outlined-basic" label="Explore About" variant="outlined" required />
+                <Button variant="contained" type="submit">
                     <SearchRounded />
                 </Button>
             </form>

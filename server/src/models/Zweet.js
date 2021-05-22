@@ -30,23 +30,18 @@ const zweetschema = mongoose.Schema({
             required: true
         }
     ], 
-    meta: {
-        views: {
-            type: Number, 
-            default: 0, 
-            required: true
-        }, 
-        like: {
-            type: Number, 
-            default: 0, 
-            required: true
-        }, 
-        unlike: {
-            type: Number, 
-            default: 0, 
-            required: true
+    views: {
+        type: Number, 
+        default: 0, 
+        required: true
+    }, 
+    like: [
+        {
+            type: mongoose.Schema.Types.ObjectId, 
+            equired: true, 
+            ref: "User"
         }
-    }
+    ]
 });
 
 zweetschema.static("formatHashtags", function (hashtags) {

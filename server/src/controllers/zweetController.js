@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 import Zweet from "../models/Zweet";
 import User from "../models/User";
 
@@ -76,13 +76,40 @@ export const zweetDetail =  async(req, res) => {
     try {
         const zweet = await Zweet.findById(id).populate("owner");
         await Zweet.findByIdAndUpdate(id, {
-            meta: {
-                views: zweet.meta.views + 1
-            }
+            views: zweet.views + 1
         });
         return res.status(200).json(zweet);
     } catch (error) {
         return res.status(404).json({
+            success: false, 
+            error: error.message
+        });
+    };
+};
+
+export const zweetReaction = async (req, res) => {
+    const { id } = req.params;
+    const { token } = req.headers;
+    try {
+        const decodedToken = await jwt.decode(token);
+        const zweet = await Zweet.findById(id);
+        if (zweet.like.includes(decodedToken.user._id)) {
+            await Zweet.findByIdAndUpdate(id, {
+                $pull: {
+                    like: decodedToken.user._id
+                }
+            });
+        } else {
+            await Zweet.findByIdAndUpdate(id, {
+                $push: {
+                    like: decodedToken.user._id
+                }
+            });
+        };
+        const updatedZweet = await Zweet.findById(id);
+        return res.status(200).json(updatedZweet);
+    } catch (error) {
+        return res.status(409).json({
             success: false, 
             error: error.message
         });

@@ -30,7 +30,7 @@ function Zweets() {
                                         <p>{zweet.description.slice(0, 45)}{zweet.description.length >= 45 ? "..." : ""}</p>
                                         <small>{zweet.createdAt}</small>
                                         <br />
-                                        <small>{zweet.meta.views} views</small>
+                                        <small>{zweet.views} views</small>
                                     </a>
                                 )) : (
                                     <p>Sorry, there's no zweets</p>
