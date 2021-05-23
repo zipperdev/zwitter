@@ -1,5 +1,6 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const users = async (req, res) => {
     try {
@@ -27,6 +28,59 @@ export const userDetail = async (req, res) => {
         };
     } catch (error) {
         return res.status(400).json({
+            success: false, 
+            error: error.message
+        });
+    };
+};
+
+export const userFollow = async (req, res) => {
+    const { id } = req.params;
+    const { token } = req.headers;
+    try {
+        const decodedToken = await jwt.decode(token);
+        const user = await User.findById(id);
+        if (id !== decodedToken.user._id) {
+            if (user.followers.includes(decodedToken.user._id)) {
+                await User.findByIdAndUpdate(id, {
+                    $pull: {
+                        followers: decodedToken.user._id
+                    }
+                });
+                await User.findByIdAndUpdate(decodedToken.user._id, {
+                    $pull: {
+                        following: id
+                    }
+                });
+            } else {
+                await User.findByIdAndUpdate(id, {
+                    $push: {
+                        followers: decodedToken.user._id
+                    }
+                });
+                await User.findByIdAndUpdate(decodedToken.user._id, {
+                    $push: {
+                        following: id
+                    }
+                });
+            };
+            const updatedFollowedUser = await User.findById(id);
+            const updatedFollowingUser = await User.findById(decodedToken.user._id);
+            return res.status(200).json({
+                success: true, 
+                message: {
+                    followedUser: updatedFollowedUser, 
+                    followingUser: updatedFollowingUser
+                }
+            });
+        } else {
+            return res.status(409).json({
+                success: false, 
+                error: "You trying to follow your user with your user."
+            });
+        };
+    } catch (error) {
+        return res.status(409).json({
             success: false, 
             error: error.message
         });

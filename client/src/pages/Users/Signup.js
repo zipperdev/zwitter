@@ -28,7 +28,7 @@ function Signup() {
                         method: "POST", 
                         data: user
                     })
-                    .then((user) => {
+                    .then(() => {
                         window.location.href = "/login";
                     });
             };

@@ -30,9 +30,9 @@ header {
         display: flex;
         align-items: center;
         color: $darkgray;
-        transition: 0.1s;
+        transition: 0.06s;
         * {
-            transition: 0.1s;
+            transition: 0.06s;
         }
         & > *:not(span) {
             width: 35px !important;
@@ -51,7 +51,7 @@ header {
         }
     }
     .current-location {
-        transition: background-color 0.1s;
+        transition: background-color 0.06s;
         color: $deepyellow;
         * {
             transition: none;

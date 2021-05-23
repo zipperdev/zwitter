@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useCookies } from "react-cookie";
 
-function Signup() {
+function Logout() {
     // eslint-disable-next-line
     const [ _, __, removeCookie ] = useCookies(["token"]);
     useEffect(() => {
@@ -19,4 +19,4 @@ function Signup() {
     );
 };
 
-export default Signup;
+export default Logout;

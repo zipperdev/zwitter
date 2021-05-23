@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import FavoriteRounded from "@material-ui/icons/FavoriteRounded";
+import FavoriteBorderRounded from "@material-ui/icons/FavoriteBorderRounded";
 import axios from "axios";
+import jwt from "jsonwebtoken";
 
 function ZweetDetail({ match }) {
-    const [ Zweet, setZweet ] = useState([]);
+    const [ zweet, setZweet ] = useState({});
+    const [ encodedToken, setEncodedToken ] = useState();
+    const [ done, setDone ] = useState(false);
     const [ cookies ] = useCookies(["token"]);
     useEffect(() => {
         axios({
                 url: `http://localhost:5000/zweets/${match.params.id}`, 
                 method: "GET"
             })
-            .then((zweet) => {
-                setZweet(zweet.data);
+            .then((zweetData) => {
+                setZweet(zweetData.data);
+                setEncodedToken(jwt.decode(cookies.token));
+                setDone(true);
             });
-    }, [match.params.id]);
+    }, [match.params.id, cookies.token]);
     const reaction = () => {
         axios({
                 url: `http://localhost:5000/zweets/${match.params.id}/reaction`, 
@@ -23,24 +31,34 @@ function ZweetDetail({ match }) {
                     token: cookies.token
                 }
             })
-            .then((zweet) => {
-                setZweet(zweet.data);
+            .then((reactionData) => {
+                setZweet(reactionData.data);
             });
     }
     return (
         <>
             <Helmet>
-                <title>Zwitter | {Zweet.title ? Zweet.title : "Zweet"}</title>
+                <title>Zwitter | {zweet.title ? zweet.title : "Zweet"}</title>
             </Helmet>
-            {Zweet.owner ? (
+            {done ? (
                 <>
-                    <h4>Made By {Zweet.owner.username}</h4>
-                    <h2>{Zweet.title}</h2>
-                    <small>{Zweet.createdAt}</small>
-                    <pre>{Zweet.description}</pre>
-                    <a href={`/zweets/${match.params.id}/delete`}>Delete Zweet</a>
-                    <a href={`/zweets/${match.params.id}/edit`}>Edit Zweet</a>
-                    <button onClick={reaction}>Like or Dislike it!!!</button>
+                    <Link to={`/users/${zweet.owner._id}`}>Made By {zweet.owner.username}</Link>
+                    <h2>{zweet.title}</h2>
+                    <small>{zweet.createdAt}</small>
+                    <pre>{zweet.description}</pre>
+                    <Link to={`/zweets/${match.params.id}/delete`}>Delete Zweet</Link>
+                    <Link to={`/zweets/${match.params.id}/edit`}>Edit Zweet</Link>
+                    {cookies.token ? (
+                        <div onClick={reaction}>{zweet.like.includes(encodedToken.user._id) ? (
+                                <FavoriteRounded />
+                            ) : (
+                                <FavoriteBorderRounded />
+                            )}
+                        </div>
+                    ) : (
+                        <>
+                        </>
+                    )}
                 </>
             ) : (
                 <h1>Loading...</h1>

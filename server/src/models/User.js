@@ -27,6 +27,20 @@ const userSchema = mongoose.Schema({
         type: String
     }, 
     location: String, 
+    followers: [
+        {
+            type: mongoose.Schema.Types.ObjectId, 
+            required: true, 
+            ref: "User"
+        }
+    ], 
+    following: [
+        {
+            type: mongoose.Schema.Types.ObjectId, 
+            required: true, 
+            ref: "User"
+        }
+    ], 
     zweets: [
         {
             type: mongoose.Schema.Types.ObjectId, 
