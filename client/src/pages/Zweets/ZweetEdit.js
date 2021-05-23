@@ -20,13 +20,14 @@ function ZweetCreate({ match }) {
                 method: "GET"
             })
             .then((zweetData) => {
+                // eslint-disable-next-line
                 if (zweetData.data.owner._id == decodedToken.user._id) {
                     setZweet({ ...zweetData.data, hashtags: zweetData.data.hashtags.join(",") });
                 } else {
                     window.location.href = `/zweets/${match.params.id}`;
                 };
             });
-    }, [match.params.id]);
+    }, [match.params.id, decodedToken.user._id]);
     const updateZweet = () => {
         axios({
                 url: `http://localhost:5000/zweets/${match.params.id}/edit`, 

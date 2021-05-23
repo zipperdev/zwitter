@@ -14,7 +14,7 @@ function ZweetDelete({ match }) {
                 method: "GET"
             })
             .then((zweet) => {
-                console.log(zweet.data.owner._id == decodedToken.user._id)
+                // eslint-disable-next-line
                 if (zweet.data.owner._id == decodedToken.user._id) {
                     axios({
                             url: `http://localhost:5000/zweets/${match.params.id}/delete`, 
@@ -28,13 +28,13 @@ function ZweetDelete({ match }) {
                                 window.location.href = `/`;
                             } else {
                                 window.location.href = `/zweets/${match.params.id}`;
-                            }
+                            };
                         });
                 } else {
                     window.location.href = `/zweets/${match.params.id}`;
                 }
             });
-    }, [match.params.id, cookies.token]);
+    }, [match.params.id, cookies.token, decodedToken.user._id]);
     return (
         <>
             <Helmet>

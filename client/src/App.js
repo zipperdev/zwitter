@@ -127,7 +127,7 @@ function RouterLink({ html, id, className, to, exact }) {
         exact
     });
     return (
-        <Link id={id ? id : ""} className={match, className ? `current-location ${className}` : match ? "current-location" : ""} to={to}>{html}</Link>
+        <Link id={id ? id : ""} className={match && className ? `current-location ${className}` : match ? "current-location" : ""} to={to}>{html}</Link>
     );
 };
 
