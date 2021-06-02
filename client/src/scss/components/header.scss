@@ -11,10 +11,16 @@ header {
     height: 100%;
     background-color: $white;
     box-shadow: $shadow-xl;
+    @media screen and (max-width: 800px) {
+        width: 150px;
+    }
     #header__logo {
         display: flex;
         margin-left: 40px;
         padding: 11px 9px 9px 12px;
+        @media screen and (max-width: 800px) {
+            margin-left: 45px;
+        }
         img {
             width: 35px;
             height: 35px;
@@ -22,21 +28,34 @@ header {
     }
     a {
         margin-left: 30px;
-        width:fit-content;
-        &:not(#header__logo) {
-            padding: 6px 24px 6px 18px;
-        }
+        width: fit-content;
         border-radius: 40px;
         display: flex;
         align-items: center;
         color: $darkgray;
         transition: 0.06s;
+        @media screen and (max-width: 800px) {
+            &:not(.write-zweet) {
+                margin-left: 35px;
+            }
+            &:not(.write-zweet) > span {
+                display: none;     
+            }
+        }
+        &:not(#header__logo) {
+            padding: 6px 24px 6px 18px;
+        }
         * {
             transition: 0.06s;
         }
         & > *:not(span) {
             width: 35px !important;
             height: 35px !important;
+            @media screen and (max-width: 800px) {
+                &:not(.write-zweet) {
+                    margin-left: 2px;
+                }
+            }
         }
         & > span {
             font-size: 24px;
@@ -46,7 +65,7 @@ header {
     }
     a:not(.write-zweet):hover {
         background-color: #FFCE5470;
-        & > * {
+        * {
             color: $deepyellow;
         }
     }
@@ -62,13 +81,28 @@ header {
         margin-left: 50%;
         transform: translateX(-50%);
         background-color: $deepyellow;
-        width: 155px !important;
-        height: 40px !important;
+        width: 155px;
+        height: 40px;
         * {
             color: $white !important;
         }
         &:hover {
             background-color: #E4990F
+        }
+        span {
+            display: inline;
+        }
+        .write-icon {
+            display: none;
+        }
+        @media screen and (max-width: 800px) {
+            width: 40px;
+            span {
+                display: none;
+            }
+            .write-icon {
+                display: inline;
+            }
         }
     }
 }

@@ -1,8 +1,9 @@
-@import "./config/_variants.scss";
-@import "./config/_reset.scss";
-@import "./config/_fonts.scss";
+@import "./configs/_variants.scss";
+@import "./configs/_reset.scss";
+@import "./configs/_fonts.scss";
 @import "./components/header.scss";
 @import "./components/form.scss";
+@import "./screens/createZweet.scss";
 
 ::selection {
     color: $white;
@@ -16,6 +17,9 @@ body {
 main {
     margin-left: 250px;
     padding: 12px 18px;
+    @media screen and (max-width: 800px) {
+        margin-left: 150px;
+    }
 }
 
 a {

@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 
 function UserDetail({ match }) {
     const [ user, setUser ] = useState();
+    const [ fail, setFail ] = useState();
     const [ done, setDone ] = useState(false);
     const [ cookies ] = useCookies(["token"]);
     const me = jwt.decode(cookies.token);
@@ -18,7 +19,10 @@ function UserDetail({ match }) {
             .then(result => {
                 setUser(result.data);
                 setDone(true);
-            });
+            })
+            .catch((err) => {
+                setFail(true);
+            });;
     }, [match.params.id]);
     const follow = () => {
         axios({
@@ -43,7 +47,9 @@ function UserDetail({ match }) {
             <Helmet>
                 <title>Zwitter | {user ? user.username : "User"}'s Profile</title>
             </Helmet>
-            {done ? (
+            {fail ? (
+                <h1>There's no existing user that has {match.params.id} id {":("}</h1>
+            ) : done ? (
                 <>
                     <h1>{user.username}</h1>
                     <h3>{user.name}</h3>

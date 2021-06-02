@@ -15,6 +15,7 @@ const MONGODB_URL = process.env.MONGODB_URL;
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use("/uploads", express.static("uploads"));
 app.use("/", globalRouter);
 app.use("/users", userRouter);
 app.use("/zweets", zweetRouter);

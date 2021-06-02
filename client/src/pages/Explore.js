@@ -9,7 +9,7 @@ import SearchRounded from "@material-ui/icons/SearchRounded"
 function Explore({ location }) {
     const [ zweetsList, setzweetsList ] = useState([]);
     useEffect(() => {
-        if (location.search) {
+        if (Boolean(location.search.match(/(keyword)=([^&]+)/g))) {
             axios({
                     url: `http://localhost:5000/zweets/search?keyword=${location.search.match(/(keyword)=([^&]+)/g)[0].split("=")[1]}`, 
                     method: "GET"
@@ -19,12 +19,12 @@ function Explore({ location }) {
                 });
         } else {
             axios({
-                url: `http://localhost:5000/zweets`, 
-                method: "GET"
-            })
-            .then((zweets) => {
-                setzweetsList(zweets.data);
-            });
+                    url: "http://localhost:5000/zweets", 
+                    method: "GET"
+                })
+                .then((zweets) => {
+                    setzweetsList(zweets.data);
+                });
         };
     }, [location.search]);
     return (
@@ -33,7 +33,7 @@ function Explore({ location }) {
                 <title>Zwitter | Explore</title>
             </Helmet>
             <form noValidate autoComplete="off">
-                <TextField name="keyword" type="text" className="outlined-basic" label="Explore About" variant="outlined" required />
+                <TextField name="keyword" type="text" className="outlined-basic" label="Explore About" variant="outlined" />
                 <Button variant="contained" type="submit">
                     <SearchRounded />
                 </Button>

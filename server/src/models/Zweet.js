@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const zweetschema = mongoose.Schema({
+    image: {
+        type: String, 
+        required: true
+    }, 
     title: {
         type: String, 
         trim: true, 

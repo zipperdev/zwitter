@@ -15,11 +15,13 @@ export const zweets = async (req, res) => {
 };
 
 export const create = async (req, res) => {
+    const image = req.file;
     const { title, description, hashtags } = req.body;
     const { token } = req.headers;
     try {
         const decodedToken = await jwt.decode(token);
         const newZweet = await Zweet.create({
+            image: image ? "/" + image.path.split("\\").join("/") : "Unset", 
             title, 
             description, 
             owner: decodedToken.user._id, 
