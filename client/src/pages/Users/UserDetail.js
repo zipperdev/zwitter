@@ -22,7 +22,7 @@ function UserDetail({ match }) {
             })
             .catch((err) => {
                 setFail(true);
-            });;
+            });
     }, [match.params.id]);
     const follow = () => {
         axios({
@@ -51,6 +51,7 @@ function UserDetail({ match }) {
                 <h1>There's no existing user that has {match.params.id} id {":("}</h1>
             ) : done ? (
                 <>
+                    <img src={`http://localhost:5000${user.avatar}`} alt={user.username} />
                     <h1>{user.username}</h1>
                     <h3>{user.name}</h3>
                     <small>{user.location}</small>

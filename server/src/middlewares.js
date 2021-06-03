@@ -52,6 +52,10 @@ export const tokenIsNull = (req, res, next) => {
     };
 };
 
+export const uploadAvatar = multer({ dest: "uploads", limits: {
+    fileSize: 8000000
+}});
+
 export const uploadZweet = multer({ dest: "uploads", limits: {
     fileSize: 10000000
 }});

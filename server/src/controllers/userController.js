@@ -1,4 +1,5 @@
 import User from "../models/User";
+import Zweet from '../models/Zweet';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -87,14 +88,58 @@ export const userFollow = async (req, res) => {
     };
 };
 
+export const userEdit = async (req, res) => {
+    const { id } = req.params;
+    const { key } = req.headers;
+    const { email, name, username, location } = req.body;
+    try {
+        const oldUser = await User.findById(id);
+        const compare = await bcrypt.compare(key, oldUser.password);
+        if (compare) {
+            await User.findByIdAndUpdate(id, {
+                email, 
+                name, 
+                username, 
+                location
+            });
+            const user = await User.findById(id);
+            return res.status(200).json({
+                success: true, 
+                token: User.getSignedToken({ user })
+            });
+        } else {
+            return res.status(400).json({
+                success: false, 
+                error: "Key is different."
+            });
+        };
+    } catch (error) {
+        return res.status(409).json({
+            success: false, 
+            error: error.message
+        });
+    }
+};
+
 export const userRemove = async (req, res) => {
     const { id } = req.params;
+    const { key } = req.headers;
     try {
-        await User.findByIdAndDelete(id);
-        return res.status(200).json({
-            success: true, 
-            message: "Successfully delete user."
-        })
+        const user = await User.findById(id);
+        const compare = await bcrypt.compare(key, user.password);
+        if (compare) {
+            await User.findByIdAndDelete(id);
+            await Zweet.deleteMany({ owner: user._id });
+            return res.status(200).json({
+                success: true, 
+                message: "Successfully delete user."
+            });
+        } else {
+            return res.status(400).json({
+                success: false, 
+                error: "Key is different."
+            });
+        };
     } catch (error) {
         return res.status(409).json({
             success: false, 
@@ -104,9 +149,11 @@ export const userRemove = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
+    const avatar = req.file;
     const { email, name, username, password, location } = req.body;
     try {
         const newUser = await User.create({
+            avatar: "/" + avatar.path.split("\\").join("/"), 
             email, 
             name, 
             username, 

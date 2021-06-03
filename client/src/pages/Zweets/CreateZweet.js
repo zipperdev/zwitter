@@ -40,10 +40,10 @@ function ZweetCreate() {
                 <title>Zwitter | Zweet</title>
             </Helmet>
             <h1>Zweet</h1>
-            <form className="create-zweet-form" encType="multipart/form-data" noValidate autoComplete="off">
-                <img src={imagePreview} alt="Preview" onError={(img) => {
-                    
-                }} />
+            <form className="zweet-form" encType="multipart/form-data" noValidate autoComplete="off">
+                <div className="img-container">
+                    <img src={imagePreview} alt="Preview" />
+                </div>
                 <Button variant="outlined" component="label">
                     <span>Upload File</span>
                     <input type="file" accept=".png, .jpg, .jepg" required hidden onChange={(e) => {

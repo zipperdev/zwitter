@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 
 function ZweetDelete({ match }) {
     const [ cookies ] = useCookies(["token"]);
-    const decodedToken = jwt.decode(cookies.token);
     useEffect(() => {
         axios({
                 url: `http://localhost:5000/zweets/${match.params.id}`, 
@@ -15,7 +14,7 @@ function ZweetDelete({ match }) {
             })
             .then((zweet) => {
                 // eslint-disable-next-line
-                if (zweet.data.owner._id == decodedToken.user._id) {
+                if (zweet.data.owner._id == jwt.decode(cookies.token).user._id) {
                     axios({
                             url: `http://localhost:5000/zweets/${match.params.id}/delete`, 
                             method: "POST", 
@@ -34,7 +33,7 @@ function ZweetDelete({ match }) {
                     window.location.href = `/zweets/${match.params.id}`;
                 }
             });
-    }, [match.params.id, cookies.token, decodedToken.user._id]);
+    }, [match.params.id, cookies.token]);
     return (
         <>
             <Helmet>

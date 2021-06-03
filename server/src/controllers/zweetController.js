@@ -21,7 +21,7 @@ export const create = async (req, res) => {
     try {
         const decodedToken = await jwt.decode(token);
         const newZweet = await Zweet.create({
-            image: image ? "/" + image.path.split("\\").join("/") : "Unset", 
+            image: "/" + image.path.split("\\").join("/"), 
             title, 
             description, 
             owner: decodedToken.user._id, 
@@ -119,6 +119,7 @@ export const zweetReaction = async (req, res) => {
 };
 
 export const edit = async (req, res) => {
+    const image = req.file;
     const { id } = req.params;
     const { token } = req.headers;
     const { title, description, hashtags } = req.body;
@@ -126,7 +127,9 @@ export const edit = async (req, res) => {
         const zweet = await Zweet.findById(id).populate("owner");
         const decodedToken = await jwt.decode(token);
         if (zweet.owner._id == decodedToken.user._id) {
+            const lastZweet = await Zweet.findById(id);
             await Zweet.findByIdAndUpdate(id, {
+                image: image ? "/" + image.path.split("\\").join("/") : lastZweet.image, 
                 title, 
                 description, 
                 hashtags: Zweet.formatHashtags(hashtags)
@@ -140,6 +143,7 @@ export const edit = async (req, res) => {
             });
         };
     } catch (error) {
+        console.log(error);
         return res.status(409).json({
             success: false, 
             error: error.message

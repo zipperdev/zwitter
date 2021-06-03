@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import FavoriteRounded from "@material-ui/icons/FavoriteRounded";
 import FavoriteBorderRounded from "@material-ui/icons/FavoriteBorderRounded";
-import noImage from "../../images/noImage.png";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 
@@ -50,7 +49,7 @@ function ZweetDetail({ match }) {
             ) : done ? (
                 <>
                     <Link to={`/users/${zweet.owner._id}`}>Made By {zweet.owner.username}</Link>
-                    <img src={zweet.image !== "Unset" ? `http://localhost:5000${zweet.image}` : noImage} alt={zweet.title} />
+                    <img src={`http://localhost:5000${zweet.image}`} alt={zweet.title} />
                     <h2>{zweet.title}</h2>
                     <small>{zweet.createdAt}</small>
                     <pre>{zweet.description}</pre>

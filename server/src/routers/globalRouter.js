@@ -1,6 +1,6 @@
 import express from "express";
 import { login, signup } from "../controllers/userController";
-import { tokenIsNull } from "../middlewares";
+import { tokenIsNull, uploadAvatar } from "../middlewares";
 
 const globalRouter = express.Router();
 
@@ -12,7 +12,7 @@ globalRouter.get("/", (req, res) => {
         license: "MIT"
     });
 });
-globalRouter.post("/signup", tokenIsNull, signup);
+globalRouter.post("/signup", tokenIsNull, uploadAvatar.single("avatar"), signup);
 globalRouter.post("/login", tokenIsNull, login);
 
 export default globalRouter;
