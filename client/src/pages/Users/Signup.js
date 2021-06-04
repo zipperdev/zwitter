@@ -56,7 +56,7 @@ function Signup() {
             </Helmet>
             <h1>Sign Up</h1>
             <form className="zweet-form" encType="multipart/form-data" noValidate autoComplete="off">
-            <div className="img-container">
+                <div className="img-container">
                     <img src={imagePreview} alt="Preview" />
                 </div>
                 <Button variant="outlined" component="label">

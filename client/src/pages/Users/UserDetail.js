@@ -57,6 +57,12 @@ function UserDetail({ match }) {
                     <small>{user.location}</small>
                     {user._id === me.user._id ? (
                         <>
+                            <Link to={`/users/${user._id}/edit`}>
+                                Edit My User
+                            </Link>
+                            <Link to={`/users/${user._id}/delete`}>
+                                Delete My User
+                            </Link>
                         </>
                     ) : (
                         <button onClick={follow}>{user.followers.includes(me.user._id) ? "Unfollow" : "Follow"}</button>

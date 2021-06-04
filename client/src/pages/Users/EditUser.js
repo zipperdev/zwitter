@@ -7,13 +7,16 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
+import noImage from "../../images/noImage.png";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 
 function EditUser({ match }) {
     // eslint-disable-next-line
     const [ cookies, setCookie, removeCookie ] = useCookies(["token"]);
+    const [ imagePreview, setImagePreview ] = useState(noImage);
     const [ user, setUser ] = useState({
+        avatar: "", 
         email: "", 
         name: "", 
         username: "", 
@@ -38,22 +41,31 @@ function EditUser({ match }) {
                         location: result.data.location
                     });
                     setDone(true);
+                    setImagePreview(`http://localhost:5000${result.data.avatar}`);
                 };
 
             });
     }, [cookies.token, match.params.id]);
     const editUser = () => {
+        const userData = new FormData();
+        userData.append("avatar", user.avatar);
+        userData.append("email", user.email);
+        userData.append("name", user.name);
+        userData.append("username", user.username);
+        userData.append("location", user.location);
         axios({
             url:  `http://localhost:5000/users/${match.params.id}/edit`, 
             method: "POST", 
-            data: user, 
+            data: userData, 
             headers: {
                 token: cookies.token, 
                 key
             }
         })
         .then(result => {
-            removeCookie("token");
+            removeCookie("token", {
+                path: "/"
+            });
             setCookie("token", result.data.token, {
                 maxAge: 1209600000, 
                 path: "/"
@@ -68,7 +80,22 @@ function EditUser({ match }) {
             </Helmet>
             <h1>Edit User</h1>
             {done ? (
-                <form noValidate autoComplete="off">
+                <form className="zweet-form" encType="multipart/form-data" noValidate autoComplete="off">
+                    <div className="img-container">
+                        <img src={imagePreview === noImage ? noImage : imagePreview} alt="Preview" />
+                    </div>
+                    <Button variant="outlined" component="label">
+                        <span>Upload File</span>
+                        <input type="file" accept=".png, .jpg, .jepg" required hidden onChange={(e) => {
+                            setUser({ ...user, avatar: e.target.files[0] });
+                            const reader = new FileReader();
+                            reader.readAsDataURL(e.target.files[0]);
+                            reader.onloadend = (finalEvent) => {
+                                const { currentTarget: { result } } = finalEvent;
+                                setImagePreview(result);
+                            };
+                        }} />
+                    </Button>
                     <TextField className="outlined-basic" label="New Name" variant="outlined" value={user.name} required onChange={(e) => {
                         e.target.value = e.target.value.slice(0, 80);
                         setUser({ ...user, name: e.target.value });

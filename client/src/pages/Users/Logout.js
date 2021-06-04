@@ -6,7 +6,9 @@ function Logout() {
     // eslint-disable-next-line
     const [ _, __, removeCookie ] = useCookies(["token"]);
     useEffect(() => {
-        removeCookie("token");
+        removeCookie("token", {
+            path: "/"
+        });
         window.location.href = "/";
     }, [removeCookie]);
     return (
