@@ -89,6 +89,7 @@ export const userFollow = async (req, res) => {
 };
 
 export const userEdit = async (req, res) => {
+    const avatar = req.file;
     const { id } = req.params;
     const { key } = req.headers;
     const { email, name, username, location } = req.body;
@@ -97,6 +98,7 @@ export const userEdit = async (req, res) => {
         const compare = await bcrypt.compare(key, oldUser.password);
         if (compare) {
             await User.findByIdAndUpdate(id, {
+                avatar: "/" + avatar.path.split("\\").join("/"), 
                 email, 
                 name, 
                 username, 
