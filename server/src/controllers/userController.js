@@ -92,16 +92,17 @@ export const userEdit = async (req, res) => {
     const avatar = req.file;
     const { id } = req.params;
     const { key } = req.headers;
-    const { email, name, username, location } = req.body;
+    const { email, name, username, info, location } = req.body;
     try {
         const oldUser = await User.findById(id);
         const compare = await bcrypt.compare(key, oldUser.password);
         if (compare) {
             await User.findByIdAndUpdate(id, {
-                avatar: "/" + avatar.path.split("\\").join("/"), 
+                avatar: avatar ? "/" + avatar.path.split("\\").join("/") : oldUser.avatar, 
                 email, 
                 name, 
                 username, 
+                info, 
                 location
             });
             const user = await User.findById(id);
@@ -116,6 +117,7 @@ export const userEdit = async (req, res) => {
             });
         };
     } catch (error) {
+        console.log(error);
         return res.status(409).json({
             success: false, 
             error: error.message
@@ -152,17 +154,25 @@ export const userRemove = async (req, res) => {
 
 export const signup = async (req, res) => {
     const avatar = req.file;
-    const { email, name, username, password, location } = req.body;
+    const { email, name, username, info, password, confrimPassword, location } = req.body;
     try {
-        const newUser = await User.create({
-            avatar: "/" + avatar.path.split("\\").join("/"), 
-            email, 
-            name, 
-            username, 
-            password, 
-            location
-        });
-        return res.status(200).json(newUser);
+        if (password === confrimPassword) {
+            const newUser = await User.create({
+                avatar: "/" + avatar.path.split("\\").join("/"), 
+                email, 
+                name, 
+                username, 
+                info, 
+                password, 
+                location
+            });
+            return res.status(200).json(newUser);
+        } else {
+            return res.status(400).json({
+                success: false, 
+                error: "Password comfrimation doesn't match."
+            });
+        };
     } catch (error) {
         return res.status(409).json({
             success: false, 

@@ -55,6 +55,7 @@ function UserDetail({ match }) {
                     <h1>{user.username}</h1>
                     <h3>{user.name}</h3>
                     <small>{user.location}</small>
+                    <pre>{user.info}</pre>
                     {user._id === me.user._id ? (
                         <>
                             <Link to={`/users/${user._id}/edit`}>

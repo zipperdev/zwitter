@@ -15,6 +15,7 @@ function Signup() {
         email: "", 
         name: "", 
         username: "", 
+        info: "", 
         password: "", 
         confrimPassoword: "", 
         location: "", 
@@ -30,7 +31,9 @@ function Signup() {
                 userData.append("email", user.email);
                 userData.append("name", user.name);
                 userData.append("username", user.username);
+                userData.append("info", user.info);
                 userData.append("password", user.password);
+                userData.append("confrimPassword", user.confrimPassoword);
                 userData.append("location", user.location);
                 userData.append("avatar", user.avatar);
                 axios({
@@ -78,6 +81,10 @@ function Signup() {
                 <TextField className="outlined-basic" label="Useraname" variant="outlined" value={user.username} required onChange={(e) => {
                     e.target.value = e.target.value.slice(0, 80);
                     setUser({ ...user, username: e.target.value });
+                }} />
+                <TextField id="outlined-basic" maxLength="200" label="Tell us you more" multiline variant="outlined" rows={14} value={user.info} onChange={(e) => {
+                    e.target.value = e.target.value.slice(0, 200);
+                    setUser({ ...user, info: e.target.value });
                 }} />
                 <TextField type="email" className="outlined-basic" label="Email" variant="outlined" value={user.email} required onChange={(e) => {
                     setUser({ ...user, email: e.target.value });

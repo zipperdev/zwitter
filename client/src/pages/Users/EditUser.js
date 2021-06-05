@@ -20,6 +20,7 @@ function EditUser({ match }) {
         email: "", 
         name: "", 
         username: "", 
+        info: "", 
         location: ""
     });
     const [ key, setKey ] = useState("");
@@ -38,12 +39,12 @@ function EditUser({ match }) {
                         email: result.data.email, 
                         name: result.data.name, 
                         username: result.data.username, 
+                        info: result.data.info, 
                         location: result.data.location
                     });
                     setDone(true);
                     setImagePreview(`http://localhost:5000${result.data.avatar}`);
                 };
-
             });
     }, [cookies.token, match.params.id]);
     const editUser = () => {
@@ -52,6 +53,7 @@ function EditUser({ match }) {
         userData.append("email", user.email);
         userData.append("name", user.name);
         userData.append("username", user.username);
+        userData.append("info", user.info);
         userData.append("location", user.location);
         axios({
             url:  `http://localhost:5000/users/${match.params.id}/edit`, 
@@ -103,6 +105,10 @@ function EditUser({ match }) {
                     <TextField className="outlined-basic" label="New Useraname" variant="outlined" value={user.username} required onChange={(e) => {
                         e.target.value = e.target.value.slice(0, 80);
                         setUser({ ...user, username: e.target.value });
+                    }} />
+                    <TextField id="outlined-basic" maxLength="200" label="Tell us you more" multiline variant="outlined" rows={14} value={user.info} onChange={(e) => {
+                        e.target.value = e.target.value.slice(0, 200);
+                        setUser({ ...user, info: e.target.value });
                     }} />
                     <TextField type="email" className="outlined-basic" label="New Email" variant="outlined" value={user.email} required onChange={(e) => {
                         setUser({ ...user, email: e.target.value });
