@@ -34,6 +34,31 @@ const zweetschema = mongoose.Schema({
             required: true
         }
     ], 
+    comments: [
+        {
+            _id: {
+                type: mongoose.Schema.Types.ObjectId, 
+                required: true, 
+                auto: true
+            }, 
+            owner: {
+                type: mongoose.Schema.Types.ObjectId, 
+                required: true, 
+                ref: "User"
+            }, 
+            content: {
+                type: String, 
+                trim: true, 
+                maxLength: 300, 
+                required: true
+            }, 
+            createdAt: {
+                type: Date, 
+                default: Date.now, 
+                required: true
+            }
+        }
+    ], 
     views: {
         type: Number, 
         default: 0, 

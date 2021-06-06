@@ -76,7 +76,7 @@ export const search = async (req, res) => {
 export const zweetDetail =  async(req, res) => {
     const { id } = req.params;
     try {
-        const zweet = await Zweet.findById(id).populate("owner");
+        const zweet = await Zweet.findById(id).populate("owner").populate("comments.owner");
         await Zweet.findByIdAndUpdate(id, {
             views: zweet.views + 1
         });
@@ -89,7 +89,45 @@ export const zweetDetail =  async(req, res) => {
     };
 };
 
-export const zweetReaction = async (req, res) => {
+export const comment = async (req, res) => {
+    const { id } = req.params;
+    const { commentId, content } = req.body;
+    const { token } = req.headers;
+    try {
+        const decodedToken = await jwt.decode(token);
+        const userId = decodedToken.user._id;
+        if (content) {
+            await Zweet.findByIdAndUpdate(id, { $push: {
+                comments: {
+                    owner: userId, 
+                    content
+                }
+            } });
+        } else if (commentId) {
+            await Zweet.findByIdAndUpdate(id, { $pull: {
+                comments: {
+                    _id: commentId, 
+                    owner: userId, 
+                }
+            } });
+        } else {
+            return res.status(400).json({
+                success: false, 
+                error: "Please write commentId or content for create or delete comment."
+            });
+        };
+        const updatedZweet = await Zweet.findById(id);
+        return res.status(200).json(updatedZweet);
+    } catch (error) {
+        console.log(error);
+        return res.status(409).json({
+            success: false, 
+            error: error.message
+        });
+    };
+};
+
+export const reaction = async (req, res) => {
     const { id } = req.params;
     const { token } = req.headers;
     try {
