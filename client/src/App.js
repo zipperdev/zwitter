@@ -25,10 +25,11 @@ import DeleteUser from "./pages/Users/DeleteUser";
 import NotFound from "./pages/Errors/NotFound";
 import Explore from "./pages/Explore";
 import "./scss/styles.scss";
+import ScrollReset from './ScrollReset';
 
 function App() {
     const [ cookies ] = useCookies(["token"]);
-    const [ encodedToken, setEncodedToken ] = useState();
+    const [ encodedToken, setEncodedToken ] = useState("");
     const [ done, setDone ] = useState(false);
     useEffect(() => {
         setEncodedToken(jwt.decode(cookies.token));
@@ -40,93 +41,95 @@ function App() {
                 <title>Zwitter</title>
             </Helmet>
             <Router>
-                <header>
-                    <RouterLink id="header__logo" exact to="/" html={(
-                        <img src={LogoImage} alt="Zwitter" />
-                    )} />
-                    <RouterLink exact to="/" html={(
-                        <>
-                            <HomeRounded />
-                            <span>Home</span>
-                        </>
-                    )} />
-                    <RouterLink exact to="/explore" html={(
-                        <>
-                            <MapRounded />
-                            <span>Explore</span>
-                        </>
-                    )} />
-                    {cookies.token ? (
-                        <>
-                            <RouterLink exact to={done ? `/users/${encodedToken.user._id}` : "/users/null"} html={(
-                                <>
-                                    <PersonRounded />
-                                    <span>Profile</span>
-                                </>
-                            )} />
-                            <RouterLink exact to="/logout" html={(
-                                <>
-                                    <LockRounded />
-                                    <span>Logout</span>
-                                </>
-                            )} />
-                            <RouterLink className="write-zweet" exact to="/zweets/create" html={(
-                                <>
-                                    <span>Zweet</span>
-                                    <CreateRoundedIcon className="write-icon" />
-                                </>
-                            )} />
-                        </>
-                    ) : (
-                        <>
-                            <RouterLink exact to="/signup" html={(
-                                <>
-                                    <PersonAddRounded />
-                                    <span>Sign Up</span>
-                                </>
-                            )} />
-                            <RouterLink exact to="/login" html={(
-                                <>
-                                    <LockOpenRounded />
-                                    <span>Login</span>
-                                </>
-                            )} />
-                        </>
-                    )}
-                </header>
-                <main>
-                    <Switch>
-                        <Route path={`/`} component={Home} exact />
-                        <Route path={`/explore`} component={Explore} exact />
-                        <Route path={`/signup`} exact>
-                            {!cookies.token ? <Signup /> : <Redirect to="/" exact />}
-                        </Route>
-                        <Route path={`/login`} exact>
-                            {!cookies.token ? <Login /> : <Redirect to="/" exact />}
-                        </Route>
-                        <Route path={`/logout`} exact>
-                            {cookies.token ? <Logout /> : <Redirect to="/" exact />}
-                        </Route>
-                        <Route path={`/users/:id([0-9a-f]{24})`} component={UserDetail} exact />
-                        <Route path={`/users/:id([0-9a-f]{24})/edit`} exact>
-                            {cookies.token ? <Route path="/users/:id([0-9a-f]{24})/edit" component={EditUser} exact /> : <Redirect to="/login" exact />}
-                        </Route>
-                        <Route path={`/users/:id([0-9a-f]{24})/delete`} exact>
-                            {cookies.token ? <Route path="/users/:id([0-9a-f]{24})/delete" component={DeleteUser} exact /> : <Redirect to="/login" exact />}
-                        </Route>
-                        <Route path={`/zweets/create`}  exact>
-                            {cookies.token ? <CreateZweet /> : <Redirect to="/login" exact />}
-                        </Route>
-                        <Route path={`/zweets/:id([0-9a-f]{24})`} component={ZweetDetail} exact />
-                        <Route path={`/zweets/:id([0-9a-f]{24})/edit`} exact>
-                            {cookies.token ? <Route path="/zweets/:id([0-9a-f]{24})/edit" component={EditZweet} exact /> : <Redirect to="/login" exact />}
-                        </Route>
-                        <Route path={`/zweets/:id/delete`} exact>
-                            {cookies.token ? <Route path="/zweets/:id([0-9a-f]{24})/delete" component={DeleteZweet} exact /> : <Redirect to="/login" exact />}
-                        </Route>
-                        <Route path={`*`} component={NotFound} />
-                    </Switch>
-                </main>
+                <ScrollReset>
+                    <header>
+                        <RouterLink id="header__logo" exact to="/" html={(
+                            <img src={LogoImage} alt="Zwitter" />
+                        )} />
+                        <RouterLink exact to="/" html={(
+                            <>
+                                <HomeRounded />
+                                <span>Home</span>
+                            </>
+                        )} />
+                        <RouterLink exact to="/explore" html={(
+                            <>
+                                <MapRounded />
+                                <span>Explore</span>
+                            </>
+                        )} />
+                        {cookies.token ? (
+                            <>
+                                <RouterLink exact to={done ? `/users/${encodedToken.user._id}` : "/users/null"} html={(
+                                    <>
+                                        <PersonRounded />
+                                        <span>Profile</span>
+                                    </>
+                                )} />
+                                <RouterLink exact to="/logout" html={(
+                                    <>
+                                        <LockRounded />
+                                        <span>Logout</span>
+                                    </>
+                                )} />
+                                <RouterLink className="write-zweet" exact to="/zweets/create" html={(
+                                    <>
+                                        <span>Zweet</span>
+                                        <CreateRoundedIcon className="write-icon" />
+                                    </>
+                                )} />
+                            </>
+                        ) : (
+                            <>
+                                <RouterLink exact to="/signup" html={(
+                                    <>
+                                        <PersonAddRounded />
+                                        <span>Sign Up</span>
+                                    </>
+                                )} />
+                                <RouterLink exact to="/login" html={(
+                                    <>
+                                        <LockOpenRounded />
+                                        <span>Login</span>
+                                    </>
+                                )} />
+                            </>
+                        )}
+                    </header>
+                    <main>
+                        <Switch>
+                            <Route path={`/`} component={Home} exact />
+                            <Route path={`/explore`} component={Explore} exact />
+                            <Route path={`/signup`} exact>
+                                {!cookies.token ? <Signup /> : <Redirect to="/" exact />}
+                            </Route>
+                            <Route path={`/login`} exact>
+                                {!cookies.token ? <Login /> : <Redirect to="/" exact />}
+                            </Route>
+                            <Route path={`/logout`} exact>
+                                {cookies.token ? <Logout /> : <Redirect to="/" exact />}
+                            </Route>
+                            <Route path={`/users/:id([0-9a-f]{24})`} component={UserDetail} exact />
+                            <Route path={`/users/:id([0-9a-f]{24})/edit`} exact>
+                                {cookies.token ? <Route path="/users/:id([0-9a-f]{24})/edit" component={EditUser} exact /> : <Redirect to="/login" exact />}
+                            </Route>
+                            <Route path={`/users/:id([0-9a-f]{24})/delete`} exact>
+                                {cookies.token ? <Route path="/users/:id([0-9a-f]{24})/delete" component={DeleteUser} exact /> : <Redirect to="/login" exact />}
+                            </Route>
+                            <Route path={`/zweets/create`}  exact>
+                                {cookies.token ? <CreateZweet /> : <Redirect to="/login" exact />}
+                            </Route>
+                            <Route path={`/zweets/:id([0-9a-f]{24})`} component={ZweetDetail} exact />
+                            <Route path={`/zweets/:id([0-9a-f]{24})/edit`} exact>
+                                {cookies.token ? <Route path="/zweets/:id([0-9a-f]{24})/edit" component={EditZweet} exact /> : <Redirect to="/login" exact />}
+                            </Route>
+                            <Route path={`/zweets/:id/delete`} exact>
+                                {cookies.token ? <Route path="/zweets/:id([0-9a-f]{24})/delete" component={DeleteZweet} exact /> : <Redirect to="/login" exact />}
+                            </Route>
+                            <Route path={`*`} component={NotFound} />
+                        </Switch>
+                    </main>
+                </ScrollReset>
             </Router>
         </CookiesProvider>
     );

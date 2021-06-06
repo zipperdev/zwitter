@@ -60,7 +60,7 @@ function ZweetCreate({ match }) {
             {done ? (
                 <>
                     <h1>Update Zweet</h1>
-                    <form className="zweet-form" encType="multipart/form-data" noValidate autoComplete="off">
+                    <form onSubmit={e => e.preventDefault()} className="zweet-form" encType="multipart/form-data" noValidate autoComplete="off">
                         <div className="img-container">
                             <img src={imagePreview === noImage ? noImage : imagePreview} alt="Preview" />
                         </div>
@@ -76,15 +76,15 @@ function ZweetCreate({ match }) {
                                 };
                             }} />
                         </Button>
-                        <TextField id="outlined-basic" label="Title" variant="outlined" value={zweet.title} required onChange={(e) => {
+                        <TextField id="outlined-basic" label="Title" variant="outlined" value={zweet.title} onChange={(e) => {
                             e.target.value = e.target.value.slice(0, 100);
                             setZweet({ ...zweet, title: e.target.value });
                         }} />
-                        <TextField id="outlined-basic" maxLength="1000" label="Description" multiline variant="outlined" rows={10} value={zweet.description} required onChange={(e) => {
+                        <TextField id="outlined-basic" maxLength="1000" label="Description" multiline variant="outlined" rows={10} value={zweet.description} onChange={(e) => {
                             e.target.value = e.target.value.slice(0, 1000);
                             setZweet({ ...zweet, description: e.target.value });
                         }} />
-                        <TextField id="outlined-basic" label="Hashtags (Seperated by comma)" variant="outlined" value={zweet.hashtags} required onChange={(e) => {
+                        <TextField id="outlined-basic" label="Hashtags (Seperated by comma)" variant="outlined" value={zweet.hashtags} onChange={(e) => {
                             setZweet({ ...zweet, hashtags: e.target.value });
                         }} />
                         <Button variant="contained" onClick={updateZweet}>

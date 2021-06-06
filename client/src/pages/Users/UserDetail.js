@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import RenderZweets from "../components/RenderZweets";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 
 function UserDetail({ match }) {
-    const [ user, setUser ] = useState();
-    const [ fail, setFail ] = useState();
+    const [ user, setUser ] = useState("");
+    const [ fail, setFail ] = useState(false);
     const [ done, setDone ] = useState(false);
     const [ cookies ] = useCookies(["token"]);
     const me = jwt.decode(cookies.token);
@@ -68,22 +69,7 @@ function UserDetail({ match }) {
                     ) : (
                         <button onClick={follow}>{user.followers.includes(me.user._id) ? "Unfollow" : "Follow"}</button>
                     )}
-                    <div>
-                        {
-                            JSON.stringify(user.zweets) !== "[]" ? 
-                                user.zweets.map((zweet, key) => (
-                                    <Link key={key} to={`/zweets/${zweet._id}`}>
-                                        <h2>{zweet.title}</h2>
-                                        <p>{zweet.description.slice(0, 45)}{zweet.description.length >= 45 ? "..." : ""}</p>
-                                        <small>{zweet.createdAt}</small>
-                                        <br />
-                                        <small>{zweet.views} views</small>
-                                    </Link>
-                                )) : (
-                                    <p>Sorry, there's no zweets</p>
-                                )
-                        }
-                    </div>
+                    <RenderZweets zweetsList={user.zweets} />
                 </>
             ) : (
                 <h1>Loading...</h1>

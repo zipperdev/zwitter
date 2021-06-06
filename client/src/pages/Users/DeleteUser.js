@@ -39,8 +39,8 @@ function DeleteUser({ match }) {
                 <title>Zwitter | Delete User</title>
             </Helmet>
             {done ? (
-                <form noValidate autoComplete="off">
-                    <TextField type="password" className="outlined-basic" label="Password" variant="outlined" value={deleteJson.key} required onChange={(e) => {
+                <form onSubmit={e => e.preventDefault()} noValidate autoComplete="off">
+                    <TextField type="password" className="outlined-basic" label="Password" variant="outlined" value={deleteJson.key} onChange={(e) => {
                         setDeleteJson({ ...deleteJson, key: e.target.value });
                     }} />
                     <Button variant="contained" onClick={deleteUser}>

@@ -82,7 +82,7 @@ function EditUser({ match }) {
             </Helmet>
             <h1>Edit User</h1>
             {done ? (
-                <form className="zweet-form" encType="multipart/form-data" noValidate autoComplete="off">
+                <form onSubmit={e => e.preventDefault()} className="zweet-form" encType="multipart/form-data" noValidate autoComplete="off">
                     <div className="img-container">
                         <img src={imagePreview === noImage ? noImage : imagePreview} alt="Preview" />
                     </div>
@@ -98,11 +98,11 @@ function EditUser({ match }) {
                             };
                         }} />
                     </Button>
-                    <TextField className="outlined-basic" label="New Name" variant="outlined" value={user.name} required onChange={(e) => {
+                    <TextField className="outlined-basic" label="New Name" variant="outlined" value={user.name}  onChange={(e) => {
                         e.target.value = e.target.value.slice(0, 80);
                         setUser({ ...user, name: e.target.value });
                     }} />
-                    <TextField className="outlined-basic" label="New Useraname" variant="outlined" value={user.username} required onChange={(e) => {
+                    <TextField className="outlined-basic" label="New Useraname" variant="outlined" value={user.username} onChange={(e) => {
                         e.target.value = e.target.value.slice(0, 80);
                         setUser({ ...user, username: e.target.value });
                     }} />
@@ -110,10 +110,10 @@ function EditUser({ match }) {
                         e.target.value = e.target.value.slice(0, 200);
                         setUser({ ...user, info: e.target.value });
                     }} />
-                    <TextField type="email" className="outlined-basic" label="New Email" variant="outlined" value={user.email} required onChange={(e) => {
+                    <TextField type="email" className="outlined-basic" label="New Email" variant="outlined" value={user.email} onChange={(e) => {
                         setUser({ ...user, email: e.target.value });
                     }} />
-                    <FormControl required  variant="outlined">
+                    <FormControl variant="outlined">
                         <InputLabel className="demo-simple-select-outlined-label">New Location</InputLabel>
                         <Select labelId="demo-simple-select-outlined-label" className="demo-simple-select-outlined" value={user.location} onChange={(e) => {
                             setUser({ ...user, location: e.target.value });
@@ -123,7 +123,7 @@ function EditUser({ match }) {
                         ))}
                         </Select>
                     </FormControl>
-                    <TextField type="password" className="outlined-basic" label="Password For Register" variant="outlined" value={key} required onChange={(e) => {
+                    <TextField type="password" className="outlined-basic" label="Password For Register" variant="outlined" value={key} onChange={(e) => {
                         setKey(e.target.value);
                     }} />
                     <Button variant="contained" onClick={editUser}>
