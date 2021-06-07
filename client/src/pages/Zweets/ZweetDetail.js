@@ -31,30 +31,32 @@ function ZweetDetail({ match }) {
             });
     }, [match.params.id, cookies.token]);
     const postComment = () => {
-        axios({
-                url: `http://localhost:5000/zweets/${match.params.id}/comment`, 
-                method: "POST", 
-                headers: {
-                    token: cookies.token
-                }, 
-                data: {
-                    content: comment
-                }
-            })
-            .then(() => {
-                axios({
-                        url: `http://localhost:5000/zweets/${match.params.id}`, 
-                        method: "GET"
-                    })
-                    .then((zweetData) => {
-                        setZweet(zweetData.data);
-                        setEncodedToken(jwt.decode(cookies.token));
-                        setDone(true);
-                    })
-                    .catch((err) => {
-                        setFail(true);
-                    });
-            });
+        if (comment.trim()) {
+            axios({
+                    url: `http://localhost:5000/zweets/${match.params.id}/comment`, 
+                    method: "POST", 
+                    headers: {
+                        token: cookies.token
+                    }, 
+                    data: {
+                        content: comment
+                    }
+                })
+                .then(() => {
+                    axios({
+                            url: `http://localhost:5000/zweets/${match.params.id}`, 
+                            method: "GET"
+                        })
+                        .then((zweetData) => {
+                            setZweet(zweetData.data);
+                            setEncodedToken(jwt.decode(cookies.token));
+                            setDone(true);
+                        })
+                        .catch((err) => {
+                            setFail(true);
+                        });
+                });
+        };
     };
     const deleteComment = comment => () => {
         axios({

@@ -31,6 +31,7 @@ const zweetschema = mongoose.Schema({
         { 
             type: String, 
             trim: true, 
+            maxLength: 300, 
             required: true
         }
     ], 

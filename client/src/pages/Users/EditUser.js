@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useCookies } from "react-cookie";
+import TextField from "../components/TextField";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
@@ -12,7 +12,6 @@ import axios from "axios";
 import jwt from "jsonwebtoken";
 
 function EditUser({ match }) {
-    // eslint-disable-next-line
     const [ cookies, setCookie, removeCookie ] = useCookies(["token"]);
     const [ imagePreview, setImagePreview ] = useState(noImage);
     const [ user, setUser ] = useState({
@@ -22,6 +21,10 @@ function EditUser({ match }) {
         username: "", 
         info: "", 
         location: ""
+    });
+    const [ passwordInputSets, setPasswordInputSets ] = useState({
+        errorType: "required", 
+        errorObj: {}
     });
     const [ key, setKey ] = useState("");
     const [ done, setDone ] = useState(false);
@@ -36,6 +39,7 @@ function EditUser({ match }) {
                     window.location.href = "/";
                 } else {
                     setUser({
+                        avatar: "Selected", 
                         email: result.data.email, 
                         name: result.data.name, 
                         username: result.data.username, 
@@ -48,32 +52,47 @@ function EditUser({ match }) {
             });
     }, [cookies.token, match.params.id]);
     const editUser = () => {
-        const userData = new FormData();
-        userData.append("avatar", user.avatar);
-        userData.append("email", user.email);
-        userData.append("name", user.name);
-        userData.append("username", user.username);
-        userData.append("info", user.info);
-        userData.append("location", user.location);
-        axios({
-            url:  `http://localhost:5000/users/${match.params.id}/edit`, 
-            method: "POST", 
-            data: userData, 
-            headers: {
-                token: cookies.token, 
-                key
-            }
-        })
-        .then(result => {
-            removeCookie("token", {
-                path: "/"
+        if (Object.values(user).every(value => value) && user.email.match(/(?<=@).{1,}(?=\..)/g)) {
+            const userData = new FormData();
+            if (user.avatar === "Selected") {
+                userData.append("avatar", "");
+            } else {
+                userData.append("avatar", user.avatar);
+            };
+            userData.append("email", user.email);
+            userData.append("name", user.name);
+            userData.append("username", user.username);
+            userData.append("info", user.info);
+            userData.append("location", user.location);
+            axios({
+                url:  `http://localhost:5000/users/${match.params.id}/edit`, 
+                method: "PUT", 
+                data: userData, 
+                headers: {
+                    token: cookies.token, 
+                    key
+                }
+            })
+            .then(result => {
+                removeCookie("token", {
+                    path: "/"
+                });
+                setCookie("token", result.data.token, {
+                    maxAge: 1209600000, 
+                    path: "/"
+                });
+                window.location.href = `/users/${match.params.id}`;
+            })
+            .catch(error => {
+                setPasswordInputSets({
+                    errorType: "", 
+                    errorObj: {
+                        error: true, 
+                        message: "Password doesn't match."
+                    }
+                });
             });
-            setCookie("token", result.data.token, {
-                maxAge: 1209600000, 
-                path: "/"
-            });
-            window.location.href = `/users/${match.params.id}`;
-        });
+        };
     };
     return (
         <>
@@ -98,22 +117,27 @@ function EditUser({ match }) {
                             };
                         }} />
                     </Button>
-                    <TextField className="outlined-basic" label="New Name" variant="outlined" value={user.name}  onChange={(e) => {
+                    {user.avatar ? (
+                        <></>
+                    ) : (
+                        <span>This field is required.</span>
+                    )}
+                    <TextField errorType="required" label="New Name" value={user.name}  onChange={(e) => {
                         e.target.value = e.target.value.slice(0, 80);
                         setUser({ ...user, name: e.target.value });
                     }} />
-                    <TextField className="outlined-basic" label="New Useraname" variant="outlined" value={user.username} onChange={(e) => {
+                    <TextField errorType="required" label="New Useraname" value={user.username} onChange={(e) => {
                         e.target.value = e.target.value.slice(0, 80);
                         setUser({ ...user, username: e.target.value });
                     }} />
-                    <TextField id="outlined-basic" maxLength="200" label="Tell us you more" multiline variant="outlined" rows={14} value={user.info} onChange={(e) => {
+                    <TextField maxLength="200" label="Tell us you more" errorType="required" direction="column" value={user.info} onChange={(e) => {
                         e.target.value = e.target.value.slice(0, 200);
                         setUser({ ...user, info: e.target.value });
                     }} />
-                    <TextField type="email" className="outlined-basic" label="New Email" variant="outlined" value={user.email} onChange={(e) => {
+                    <TextField type="email" errorType="email" label="New Email" value={user.email} onChange={(e) => {
                         setUser({ ...user, email: e.target.value });
                     }} />
-                    <FormControl variant="outlined">
+                    <FormControl error={user.location.trim() === ""} variant="outlined">
                         <InputLabel className="demo-simple-select-outlined-label">New Location</InputLabel>
                         <Select labelId="demo-simple-select-outlined-label" className="demo-simple-select-outlined" value={user.location} onChange={(e) => {
                             setUser({ ...user, location: e.target.value });
@@ -123,7 +147,11 @@ function EditUser({ match }) {
                         ))}
                         </Select>
                     </FormControl>
-                    <TextField type="password" className="outlined-basic" label="Password For Register" variant="outlined" value={key} onChange={(e) => {
+                    <TextField type="password" errorType={passwordInputSets.errorType} errorObj={passwordInputSets.errorObj} label="Password For Register" value={key} onChange={(e) => {
+                        setPasswordInputSets({
+                            errorType: "required", 
+                            errorObj: {}
+                        });
                         setKey(e.target.value);
                     }} />
                     <Button variant="contained" onClick={editUser}>

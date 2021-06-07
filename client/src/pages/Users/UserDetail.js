@@ -72,7 +72,7 @@ function UserDetail({ match }) {
                     <RenderZweets zweetsList={user.zweets} />
                 </>
             ) : (
-                <h1>Loading...</h1>
+                <></>
             )}
         </>
     );

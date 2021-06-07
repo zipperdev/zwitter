@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useCookies } from "react-cookie";
-import TextField from "@material-ui/core/TextField";
+import TextField from "../components/TextField";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
 import jwt from "jsonwebtoken";
@@ -10,6 +10,10 @@ function DeleteUser({ match }) {
     // eslint-disable-next-line
     const [ cookies, _, __ ] = useCookies(["token"]);
     const [ done, setDone ] = useState(false);
+    const [ passwordInputSets, setPasswordInputSets ] = useState({
+        errorType: "required", 
+        errorObj: {}
+    });
     useEffect(() => {
         if (jwt.decode(cookies.token).user._id !== match.params.id) {
             window.location.href = "/";
@@ -21,17 +25,28 @@ function DeleteUser({ match }) {
         key: ""
     });
     const deleteUser = () => {
-        axios({
-                url: `http://localhost:5000/users/${match.params.id}/delete`, 
-                method: "DELETE",
-                headers: {
-                    token: cookies.token, 
-                    key: deleteJson.key
-                }
-            })
-            .then(result => {
-                window.location.href = "/logout";
-            });
+        if (deleteJson.key.trim()) {
+            axios({
+                    url: `http://localhost:5000/users/${match.params.id}/delete`, 
+                    method: "DELETE",
+                    headers: {
+                        token: cookies.token, 
+                        key: deleteJson.key
+                    }
+                })
+                .then(result => {
+                    window.location.href = "/logout";
+                })
+                .catch(error => {
+                    setPasswordInputSets({
+                        errorType: "", 
+                        errorObj: {
+                            error: true, 
+                            message: "Password doesn't match."
+                        }
+                    });
+                });
+        };
     };
     return (
         <>
@@ -40,7 +55,11 @@ function DeleteUser({ match }) {
             </Helmet>
             {done ? (
                 <form onSubmit={e => e.preventDefault()} noValidate autoComplete="off">
-                    <TextField type="password" className="outlined-basic" label="Password" variant="outlined" value={deleteJson.key} onChange={(e) => {
+                    <TextField type="password" errorType={passwordInputSets.errorType} errorObj={passwordInputSets.errorObj} label="Password" value={deleteJson.key} onChange={(e) => {
+                        setPasswordInputSets({
+                            errorType: "required", 
+                            errorObj: {}
+                        });
                         setDeleteJson({ ...deleteJson, key: e.target.value });
                     }} />
                     <Button variant="contained" onClick={deleteUser}>

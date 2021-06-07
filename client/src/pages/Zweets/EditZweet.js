@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useCookies } from "react-cookie";
+import TextField from "../components/TextField";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import noImage from "../../images/noImage.png";
 import axios from "axios";
 import jwt from "jsonwebtoken";
@@ -23,8 +23,7 @@ function ZweetCreate({ match }) {
                 method: "GET"
             })
             .then((zweetData) => {
-                // eslint-disable-next-line
-                if (zweetData.data.owner._id == jwt.decode(cookies.token).user._id) {
+                if (zweetData.data.owner._id === jwt.decode(cookies.token).user._id) {
                     setZweet({ ...zweetData.data, hashtags: zweetData.data.hashtags.join(",") });
                     setDone(true);
                     setImagePreview(`http://localhost:5000${zweetData.data.image}`);
@@ -34,23 +33,25 @@ function ZweetCreate({ match }) {
             });
     }, [match.params.id, cookies.token]);
     const updateZweet = () => {
-        const zweetData = new FormData();
-        zweetData.append("title", zweet.title);
-        zweetData.append("description", zweet.description);
-        zweetData.append("hashtags", zweet.hashtags);
-        zweetData.append("image", zweet.image);
-        axios({
-                url: `http://localhost:5000/zweets/${match.params.id}/edit`, 
-                method: "POST", 
-                headers: {
-                    token: cookies.token, 
-                    "content-type": "multipart/form-data"
-                }, 
-                data: zweetData
-            })
-            .then((zweet) => {
-                window.location.href = `/zweets/${zweet.data._id}`;
-            });
+        if (Object.values(zweet).every(value => value)) {
+            const zweetData = new FormData();
+            zweetData.append("title", zweet.title);
+            zweetData.append("description", zweet.description);
+            zweetData.append("hashtags", zweet.hashtags);
+            zweetData.append("image", zweet.image);
+            axios({
+                    url: `http://localhost:5000/zweets/${match.params.id}/edit`, 
+                    method: "PUT", 
+                    headers: {
+                        token: cookies.token, 
+                        "content-type": "multipart/form-data"
+                    }, 
+                    data: zweetData
+                })
+                .then((zweet) => {
+                    window.location.href = `/zweets/${zweet.data._id}`;
+                });
+        };
     };
     return (
         <>
@@ -76,15 +77,15 @@ function ZweetCreate({ match }) {
                                 };
                             }} />
                         </Button>
-                        <TextField id="outlined-basic" label="Title" variant="outlined" value={zweet.title} onChange={(e) => {
+                        <TextField errorType="required" label="Title" value={zweet.title} onChange={(e) => {
                             e.target.value = e.target.value.slice(0, 100);
                             setZweet({ ...zweet, title: e.target.value });
                         }} />
-                        <TextField id="outlined-basic" maxLength="1000" label="Description" multiline variant="outlined" rows={10} value={zweet.description} onChange={(e) => {
+                        <TextField errorType="required" maxLength="1000" label="Tell us more" direction="column" value={zweet.description} onChange={(e) => {
                             e.target.value = e.target.value.slice(0, 1000);
                             setZweet({ ...zweet, description: e.target.value });
                         }} />
-                        <TextField id="outlined-basic" label="Hashtags (Seperated by comma)" variant="outlined" value={zweet.hashtags} onChange={(e) => {
+                        <TextField errorType="required" label="Hashtags for find (Seperated by comma)" value={zweet.hashtags} onChange={(e) => {
                             setZweet({ ...zweet, hashtags: e.target.value });
                         }} />
                         <Button variant="contained" onClick={updateZweet}>

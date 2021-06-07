@@ -13,11 +13,10 @@ function ZweetDelete({ match }) {
                 method: "GET"
             })
             .then((zweet) => {
-                // eslint-disable-next-line
-                if (zweet.data.owner._id == jwt.decode(cookies.token).user._id) {
+                if (zweet.data.owner._id === jwt.decode(cookies.token).user._id) {
                     axios({
                             url: `http://localhost:5000/zweets/${match.params.id}/delete`, 
-                            method: "POST", 
+                            method: "DELETE", 
                             headers: {
                                 token: cookies.token
                             }

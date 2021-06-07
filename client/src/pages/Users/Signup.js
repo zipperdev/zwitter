@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
+import TextField from "../components/TextField";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
@@ -70,25 +70,30 @@ function Signup() {
                         };
                     }} />
                 </Button>
-                <TextField error={user.name.trim() === ""} helperText={user.name.trim() === "" ? "This field is required." : " "} className="outlined-basic" label="Name" variant="outlined" value={user.name} onChange={(e) => {
+                {user.avatar ? (
+                    <></>
+                ) : (
+                    <span>This field is required.</span>
+                )}
+                <TextField label="Name" value={user.name} errorType="required" onChange={(e) => {
                     e.target.value = e.target.value.slice(0, 80);
                     setUser({ ...user, name: e.target.value });
                 }} />
-                <TextField error={user.username.trim() === ""} helperText={user.username.trim() === "" ? "This field is required." : " "} className="outlined-basic" label="Useraname" variant="outlined" value={user.username} onChange={(e) => {
+                <TextField label="Useraname" value={user.username} errorType="required" onChange={(e) => {
                     e.target.value = e.target.value.slice(0, 80);
                     setUser({ ...user, username: e.target.value });
                 }} />
-                <TextField error={user.info.trim() === ""} helperText={user.info.trim() === "" ? "This field is required." : " "} id="outlined-basic" maxLength="200" label="Tell us you more" multiline variant="outlined" rows={14} value={user.info} onChange={(e) => {
+                <TextField maxLength="200" label="Tell us you more" errorType="required" direction="column" value={user.info} onChange={(e) => {
                     e.target.value = e.target.value.slice(0, 200);
                     setUser({ ...user, info: e.target.value });
                 }} />
-                <TextField error={user.email.trim() === "" || !user.email.match(/(?<=@).{1,}(?=\..)/g)} helperText={user.email.trim() === "" ? "This field is required." : !user.email.match(/(?<=@).{1,}(?=\..)/g) ? "Please write your email correctly." : " "} type="email" className="outlined-basic" label="Email" variant="outlined" value={user.email} onChange={(e) => {
+                <TextField type="email" errorType="email" label="Email" value={user.email} onChange={(e) => {
                     setUser({ ...user, email: e.target.value });
                 }} />
-                <TextField error={user.password.trim() === "" || user.password.trim().length < 8} helperText={user.password.trim() === "" ? "This field is required." : user.password.trim().length < 8 ? "Please enter a password of at least 8 characters." : " "} type="password" className="outlined-basic" label="Password" variant="outlined" value={user.password} onChange={(e) => {
+                <TextField type="password" errorType="password" label="Password" value={user.password} onChange={(e) => {
                     setUser({ ...user, password: e.target.value });
                 }} />
-                <TextField error={user.confrimPassoword.trim() === "" || user.confrimPassoword !== user.password} helperText={user.confrimPassoword.trim() === "" ? "This field is required." :user.confrimPassoword !== user.password ? "Password and password confirmation doesn't match." : " "} type="password" className="outlined-basic" label="Password Confrim" variant="outlined" value={user.confrimPassoword} onChange={(e) => {
+                <TextField type="password" errorType="comfrimPassword" label="Password Confrim" value={user.confrimPassoword} subValue={user.password} onChange={(e) => {
                     setUser({ ...user, confrimPassoword: e.target.value });
                 }} />
                 <FormControl error={user.location.trim() === ""} variant="outlined">

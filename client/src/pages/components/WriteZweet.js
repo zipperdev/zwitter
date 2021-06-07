@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
+import TextField from "../components/TextField";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import noImage from "../../images/noImage.png";
 import axios from "axios";
 
@@ -15,23 +15,25 @@ function WriteZweet() {
         image: ""
     });
     const createZweet = () => {
-        const zweetData = new FormData();
-        zweetData.append("title", zweet.title);
-        zweetData.append("description", zweet.description);
-        zweetData.append("hashtags", zweet.hashtags);
-        zweetData.append("image", zweet.image);
-        axios({
-                url: "http://localhost:5000/zweets/create", 
-                method: "POST", 
-                headers: {
-                    token: cookies.token, 
-                    "content-type": "multipart/form-data"
-                }, 
-                data: zweetData
-            })
-            .then((zweet) => {
-                window.location.href = `/zweets/${zweet.data._id}`;
-            });
+        if (Object.values(zweet).every(value => value)) {
+            const zweetData = new FormData();
+            zweetData.append("title", zweet.title);
+            zweetData.append("description", zweet.description);
+            zweetData.append("hashtags", zweet.hashtags);
+            zweetData.append("image", zweet.image);
+            axios({
+                    url: "http://localhost:5000/zweets/create", 
+                    method: "POST", 
+                    headers: {
+                        token: cookies.token, 
+                        "content-type": "multipart/form-data"
+                    }, 
+                    data: zweetData
+                })
+                .then((zweet) => {
+                    window.location.href = `/zweets/${zweet.data._id}`;
+                });
+        };
     };
     return (
         <form onSubmit={e => e.preventDefault()} className="zweet-form" encType="multipart/form-data" noValidate autoComplete="off">
@@ -50,15 +52,21 @@ function WriteZweet() {
                     };
                 }} />
             </Button>
-            <TextField id="outlined-basic" label="What's going on?" variant="outlined" value={zweet.title} onChange={(e) => {
+            {zweet.image ? (
+                <></>
+            ) : (
+                <span>This field is required.</span>
+            )}
+            <TextField errorType="required" label="What's going on?" value={zweet.title} onChange={(e) => {
                 e.target.value = e.target.value.slice(0, 100);
                 setZweet({ ...zweet, title: e.target.value });
             }} />
-            <TextField id="outlined-basic" maxLength="1000" label="Tell us more" multiline variant="outlined" rows={14} value={zweet.description} onChange={(e) => {
+            <TextField errorType="required" maxLength="1000" label="Tell us more" direction="column" value={zweet.description} onChange={(e) => {
                 e.target.value = e.target.value.slice(0, 1000);
                 setZweet({ ...zweet, description: e.target.value });
             }} />
-            <TextField id="outlined-basic" label="Hashtags for find (Seperated by comma)" variant="outlined" value={zweet.hashtags} onChange={(e) => {
+            <TextField errorType="required" label="Hashtags for find (Seperated by comma)" value={zweet.hashtags} onChange={(e) => {
+                e.target.value = e.target.value.slice(0, 300);
                 setZweet({ ...zweet, hashtags: e.target.value });
             }} />
             <Button variant="contained" onClick={createZweet}>

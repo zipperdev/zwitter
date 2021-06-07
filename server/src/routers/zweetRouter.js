@@ -10,7 +10,7 @@ zweetRouter.get("/search", search);
 zweetRouter.get("/:id", zweetDetail);
 zweetRouter.post("/:id/comment", tokenVerify, comment);
 zweetRouter.post("/:id/reaction", tokenVerify, reaction);
-zweetRouter.post("/:id/edit", tokenVerify, uploadZweet.single("image"), edit);
-zweetRouter.post("/:id/delete", tokenVerify, remove);
+zweetRouter.put("/:id/edit", tokenVerify, uploadZweet.single("image"), edit);
+zweetRouter.delete("/:id/delete", tokenVerify, remove);
 
 export default zweetRouter;
