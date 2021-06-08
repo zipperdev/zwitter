@@ -35,7 +35,7 @@ export const userDetail = async (req, res) => {
     };
 };
 
-export const userFollow = async (req, res) => {
+export const follow = async (req, res) => {
     const { id } = req.params;
     const { token } = req.headers;
     try {
@@ -88,7 +88,7 @@ export const userFollow = async (req, res) => {
     };
 };
 
-export const userEdit = async (req, res) => {
+export const edit = async (req, res) => {
     const avatar = req.file;
     const { id } = req.params;
     const { key } = req.headers;
@@ -111,7 +111,7 @@ export const userEdit = async (req, res) => {
                 token: User.getSignedToken({ user })
             });
         } else {
-            return res.status(400).json({
+            return res.status(401).json({
                 success: false, 
                 error: "Key is different."
             });
@@ -125,7 +125,44 @@ export const userEdit = async (req, res) => {
     }
 };
 
-export const userRemove = async (req, res) => {
+export const changePassword = async (req, res) => {
+    const { id } = req.params;
+    const { key } = req.headers;
+    const { password, confirmPassword } = req.body;
+    try {
+        if (password === confirmPassword) {
+            const oldUser = await User.findById(id);
+            const compare = await bcrypt.compare(key, oldUser.password);
+            if (compare) {
+                const user = await User.findById(id);
+                user.password = password;
+                await user.save();
+                return res.status(200).json({
+                    success: true, 
+                    token: User.getSignedToken({ user })
+                });
+            } else {
+                return res.status(401).json({
+                    success: false, 
+                    error: "Key is different."
+                });
+            };
+        } else {
+            return res.status(400).json({
+                success: false, 
+                error: "Password comfrimation doesn't match."
+            });
+        };
+    } catch (error) {
+        console.log(error);
+        return res.status(409).json({
+            success: false, 
+            error: error.message
+        });
+    }
+};
+
+export const remove = async (req, res) => {
     const { id } = req.params;
     const { key } = req.headers;
     try {
@@ -139,7 +176,7 @@ export const userRemove = async (req, res) => {
                 message: "Successfully delete user."
             });
         } else {
-            return res.status(400).json({
+            return res.status(401).json({
                 success: false, 
                 error: "Key is different."
             });

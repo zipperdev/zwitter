@@ -24,8 +24,9 @@ import EditUser from "./pages/Users/EditUser";
 import DeleteUser from "./pages/Users/DeleteUser";
 import NotFound from "./pages/Errors/NotFound";
 import Explore from "./pages/Explore";
+import EditPassword from "./pages/Users/EditPassword";
+import ScrollReset from "./ScrollReset";
 import "./scss/styles.scss";
-import ScrollReset from './ScrollReset';
 
 function App() {
     const [ cookies ] = useCookies(["token"]);
@@ -112,6 +113,9 @@ function App() {
                             <Route path={`/users/:id([0-9a-f]{24})`} component={UserDetail} exact />
                             <Route path={`/users/:id([0-9a-f]{24})/edit`} exact>
                                 {cookies.token ? <Route path="/users/:id([0-9a-f]{24})/edit" component={EditUser} exact /> : <Redirect to="/login" exact />}
+                            </Route>
+                            <Route path={`/users/:id([0-9a-f]{24})/edit/password`} exact>
+                                {cookies.token ? <Route path="/users/:id([0-9a-f]{24})/edit/password" component={EditPassword} exact /> : <Redirect to="/login" exact />}
                             </Route>
                             <Route path={`/users/:id([0-9a-f]{24})/delete`} exact>
                                 {cookies.token ? <Route path="/users/:id([0-9a-f]{24})/delete" component={DeleteUser} exact /> : <Redirect to="/login" exact />}
